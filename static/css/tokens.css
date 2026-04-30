@@ -1,0 +1,88 @@
+:root {
+  color-scheme: light;
+
+  /* -----------------
+   * Primitive
+   * ----------------- */
+
+  /* primary */
+  --color-primary:        #043565;
+  --color-primary-hover:  #0A4E6F;
+  --color-primary-active: #02244A;
+  --color-primary-soft:   #F8F9FD;
+
+  /* accent */
+  --color-accent-soft:   #C4E0FD;
+  --color-accent:        #0970D7;
+  --color-accent-strong: #064789;
+
+  /* secondary */
+  --color-secondary:     #E5ECF4;
+  --color-secondary-100: #D4E0ED;
+  --color-secondary-150: #B7CBE1;
+  --color-secondary-400: #4877AD;
+
+  /* neutral */
+  --color-neutral-bg:          #F8F9FD;
+  --color-neutral-chip-bg:     #F4F6FB;
+  --color-neutral-divider:     #EEF1F6;
+  --color-neutral-hair:        rgba(15, 30, 55, 0.08);  /* #0F1E37 @ 8% */
+  --color-neutral-hair-strong: rgba(15, 30, 55, 0.14);  /* #0F1E37 @ 14% */
+
+  /* text */
+  --color-text-primary: #0D1F36;
+  --color-text-soft:    #4A5C78;
+  --color-text-muted:   #8A98AE;
+
+  /* status */
+  --color-red: #E0393E;
+  --color-black: #0C0C0C;
+  --color-white: #FFFFFF;
+
+  /* -----------------
+   * Aliases
+   * ----------------- */
+
+  /* background */
+  --color-bg:          var(--color-neutral-bg);
+  --color-bg-subtle:   var(--color-primary-soft);
+  --color-bg-chip:     var(--color-neutral-chip-bg);
+  --color-bg-elevated: var(--color-white);
+
+  /* foreground */
+  --color-fg:          var(--color-text-primary);
+  --color-fg-soft:     var(--color-text-soft);
+  --color-fg-muted:    var(--color-text-muted);
+  --color-fg-on-brand: var(--color-white);
+
+  /* border / divider */
+  --color-border:        var(--color-neutral-divider);
+  --color-border-hair:   var(--color-neutral-hair);
+  --color-border-strong: var(--color-neutral-hair-strong);
+  --color-border-focus:  var(--color-accent);
+
+  /* status alias */
+  --color-danger-fg: var(--color-white);
+
+  /* interactive effect */
+  --color-focus-ring: var(--color-accent);
+  --color-overlay:    rgba(15, 30, 55, 0.50);
+  --color-selection:  rgba(9, 112, 215, 0.20);
+
+  accent-color: var(--color-primary);
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+::selection {
+  background-color: var(--color-selection);
+  color: var(--color-fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}

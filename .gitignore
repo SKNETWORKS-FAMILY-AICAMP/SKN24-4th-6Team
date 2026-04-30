@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environments / secrets — NEVER commit
+.env
+.env.*
+!.env.example
+
+# Django
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+staticfiles/
+mediafiles/
+media/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Tooling caches
+.ruff_cache/
+.mypy_cache/
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
