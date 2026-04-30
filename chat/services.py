@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 from django.conf import settings
 
-from chat.models import Message, Thread
+from chat.models import Chat, Chatroom
 
 
 class AigoAIError(RuntimeError):
@@ -36,16 +36,19 @@ def ask_aigo_ai(question: str, *, timeout: float = 30.0) -> str:
   return answer
 
 
-def append_turn(thread: Thread, *, user_content: str) -> Message:
+def append_turn(chatroom: Chatroom, *, user_content: str) -> Chat:
   """Persist a user message, call aigo-ai, persist the assistant reply.
 
   Returns the assistant Message. The user Message is also created as a side
   effect — caller can inspect via thread.messages.
   """
-  Message.objects.create(thread=thread, role=Message.Role.USER, content=user_content)
+  Chat.objects.create(chatroom_id=chatroom, role=Chat.Role.USER, content=user_content)
   answer = ask_aigo_ai(user_content)
-  return Message.objects.create(
-    thread=thread,
-    role=Message.Role.ASSISTANT,
+
+  assistant_message = Chat.objects.create(
+    chatroom_id=chatroom,
+    role=Chat.Role.ASSISTANT,  # Message → Chat
     content=answer,
   )
+  chatroom.save(update_fields=["last_chat_at"])
+  return assistant_message

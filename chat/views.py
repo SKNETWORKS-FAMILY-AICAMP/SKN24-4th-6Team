@@ -3,52 +3,46 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from chat.models import Thread
+from chat.models import Chatroom
 from chat.serializers import (
-  MessageSerializer,
+  ChatSerializer,
   SendMessageSerializer,
-  ThreadSerializer,
+  ChatroomSerializer,
 )
 from chat.services import AigoAIError, append_turn
 
 
-class ThreadListCreateView(generics.ListCreateAPIView):
-  """GET /chat/threads — list current user's threads. POST — create a new thread."""
-
-  serializer_class = ThreadSerializer
+class ChatroomListCreateView(generics.ListCreateAPIView):  # ThreadListCreateView → ChatroomListCreateView
+  serializer_class = ChatroomSerializer                    # ThreadSerializer → ChatroomSerializer
   permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
-    return Thread.objects.filter(user=self.request.user)
+    return Chatroom.objects.filter(user_id=self.request.user)  # Thread → Chatroom
 
   def perform_create(self, serializer) -> None:
-    serializer.save(user=self.request.user)
+    serializer.save(user_id=self.request.user)
 
 
-class ThreadDetailView(generics.RetrieveDestroyAPIView):
-  """GET /chat/threads/<id> — fetch one thread + its messages."""
-
-  serializer_class = ThreadSerializer
+class ChatroomDetailView(generics.RetrieveDestroyAPIView):  # ThreadDetailView → ChatroomDetailView
+  serializer_class = ChatroomSerializer                      # ThreadSerializer → ChatroomSerializer
   permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
-    return Thread.objects.filter(user=self.request.user).prefetch_related("messages")
+    return Chatroom.objects.filter(user_id=self.request.user).prefetch_related("chats")  # Thread → Chatroom, messages → chats
 
 
 class SendMessageView(generics.GenericAPIView):
-  """POST /chat/threads/<id>/messages — send a user turn, get an assistant reply."""
-
   serializer_class = SendMessageSerializer
   permission_classes = [IsAuthenticated]
 
   def post(self, request: Request, pk: int) -> Response:
-    thread = generics.get_object_or_404(Thread, pk=pk, user=request.user)
+    chatroom = generics.get_object_or_404(Chatroom, pk=pk, user_id=request.user)  # thread → chatroom, Thread → Chatroom
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
     try:
       assistant_message = append_turn(
-        thread,
+        chatroom,
         user_content=serializer.validated_data["content"],
       )
     except AigoAIError as exc:
@@ -58,6 +52,6 @@ class SendMessageView(generics.GenericAPIView):
       )
 
     return Response(
-      MessageSerializer(assistant_message).data,
+      ChatSerializer(assistant_message).data,  # MessageSerializer → ChatSerializer
       status=status.HTTP_201_CREATED,
     )
