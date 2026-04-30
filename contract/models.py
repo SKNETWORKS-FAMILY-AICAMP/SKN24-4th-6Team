@@ -17,7 +17,7 @@ import uuid
 class Contract(models.Model):
     contract_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     chatroom = models.OneToOneField('chat.Chatroom', on_delete=models.CASCADE)              # chat앱의 Chatroom 참조 | chatroom에서 해당 chatroom 삭제 시, contract도 같이 삭제
-    title = models.CharField(max_length=100, null=True)                                     #
+    title = models.CharField(max_length=100, null=True)
     content = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     size = models.IntegerField(null=True)
