@@ -27,21 +27,23 @@ class Contract(models.Model):
 
 
 
-# 테이블명: contract
+# 테이블명: property_info
     # (참고) NN = Not Null
     # contract_id   uuid            NN      (FK)
     # location      varchar(100)    Null
-    # period        date            Null
+    # start_date    date            Null
+    # end_date      date            Null
     # month_rent    int             Null
-    # security      int             Null
+    # deposit       int             Null
     # house_cost    varchar(10)     Null
 
 class PropertyInfo(models.Model):
     contract = models.OneToOneField(Contract, on_delete=models.CASCADE, primary_key=True)   # 동일 Contract 참조 | contract(테이블)에서 해당 chatroom 삭제 시, property_info도 같이 삭제
     location = models.CharField(max_length=40, null=True)
-    period = models.DateField(null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
     month_rent = models.IntegerField(null=True)
-    security = models.IntegerField(null=True)
+    deposit = models.IntegerField(null=True)
     house_cost = models.CharField(max_length=10, null=True)
 
     class Meta:

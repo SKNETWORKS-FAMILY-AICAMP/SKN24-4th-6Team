@@ -13,8 +13,9 @@ import logging
 @require_http_methods(['POST'])                                             # POST 요청만 허용
 def upload_contract(request, chatroom_id):                                  # URL에서 어느 채팅방(chatroom_id)의 계약서인지 받기
                                                                             # 문제: 피그마 상에서는 채팅방 생성 화면에서 pdf를 받을 수 있게 되어있는데, 현재 정의한 함수에서는 chatroom_id를 무조건 받게 되어있다는 점
+                                                                                # 이렇게 되면 첫 쿼리를 보낸 후에야 pdf를 업로드 할 수 있게 된다.
                                                                                     # -> 이렇게 되면 채팅방 생성 화면에서는 pdf 업로드를 막거나 : 사용자 편의만 보면 이 방향으로 가기도 애매함.
-                                                                                    # -> 채팅방 생성 화면에서 pdf를 올리는 그 순간 chatroom_id도 만들어지게 하거나 : 그럼 query 일절 없이 pdf를 올린 채팅방에 대한 취급을 별개로 처리해줘야 해서 로직이 복잡해짐.
+                                                                                    # -> 채팅방 생성 화면에서 pdf를 올리는 그 순간 chatroom_id도 만들어지게 하거나 : 그럼 query는 입력하지 않고 pdf를 올린 채팅방에 대한 취급을 별도로 처리해줘야 해서 로직이 복잡해짐.
                                                                                     # -> 채팅방 생성 누르면 채팅방 id 부여: 흠.. 지지해질 거 같은데 지지해...
 
     # Step 0. 채팅방 유저와 조작자가 일치하는지를 확인
@@ -97,9 +98,10 @@ def get_contract(request, chatroom_id):
             },
             'property_info': {
                 'location': property_info.location,
-                'period': property_info.period,
+                'start_date': str(property_info.start_date),
+                'end_date': str(property_info.end_date),
                 'month_rent': property_info.month_rent,
-                'security': property_info.security,
+                'deposit': property_info.deposit,
                 'house_cost': property_info.house_cost,
             }
         })
@@ -120,9 +122,10 @@ def update_property(request, chatroom_id):
         property_info = PropertyInfo.objects.get(contract=contract)
 
         property_info.location = request.POST.get('location', property_info.location)
-        property_info.period = request.POST.get('period', property_info.period)
+        property_info.start_date = request.POST.get('period', property_info.start_date)
+        property_info.end_date = request.POST.get('period', property_info.end_date)
         property_info.month_rent = request.POST.get('month_rent', property_info.month_rent)
-        property_info.security = request.POST.get('security', property_info.security)
+        property_info.deposit = request.POST.get('deposit', property_info.deposit)
         property_info.house_cost = request.POST.get('house_cost', property_info.house_cost)
         property_info.save()
 
