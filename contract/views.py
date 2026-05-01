@@ -2,14 +2,24 @@ import requests
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 from .models import Contract, PropertyInfo
-from django.shortcuts import render
+from chat.models import Chatroom
+import logging
 
 # Create your views here.
 
-# TODO : @ 로그인권한 추가
+@login_required()                                                           # settings.py에서 LOGIN_URL을 설정했으면 이렇게 두고, 아니라면 login_url = ''
 @require_http_methods(['POST'])                                             # POST 요청만 허용
 def upload_contract(request, chatroom_id):                                  # URL에서 어느 채팅방(chatroom_id)의 계약서인지 받기
+                                                                            # 문제: 피그마 상에서는 채팅방 생성 화면에서 pdf를 받을 수 있게 되어있는데, 현재 정의한 함수에서는 chatroom_id를 무조건 받게 되어있다는 점
+                                                                                    # -> 이렇게 되면 채팅방 생성 화면에서는 pdf 업로드를 막거나 : 사용자 편의만 보면 이 방향으로 가기도 애매함.
+                                                                                    # -> 채팅방 생성 화면에서 pdf를 올리는 그 순간 chatroom_id도 만들어지게 하거나 : 그럼 query 일절 없이 pdf를 올린 채팅방에 대한 취급을 별개로 처리해줘야 해서 로직이 복잡해짐.
+                                                                                    # -> 채팅방 생성 누르면 채팅방 id 부여: 흠.. 지지해질 거 같은데 지지해...
+
+    # Step 0. 채팅방 유저와 조작자가 일치하는지를 확인
+    if not Chatroom.objects.filter(chatroom_id=chatroom_id, user_id=request.user).exists():
+        return JsonResponse({'success': False, 'message': '권한이 없습니다'}, status=403)
     
     # Step 1. 파일 검증
     # 파일 존재 여부 확인
@@ -30,55 +40,50 @@ def upload_contract(request, chatroom_id):                                  # UR
         response = requests.post(
             settings.INFER_URL,                                             # config의 settings.py에 있는 FastAPI 서버 주소
             files={'file': (file.name, file.read(), 'application/pdf')},
-            timeout=settings.INFER_TIMEOUT                                  # config의 settings.py에 있는 timeout 값
+            # timeout=settings.INFER_TIMEOUT                                  # config의 settings.py에 있는 timeout 값 # TODO: 타임아웃 설정하실 겁니까?
         )
         result = response.json()
     except requests.exceptions.Timeout:
         return JsonResponse({'success': False, 'message': 'AI 서버 응답 시간 초과'}, status=504)
     except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.exception(f'AI 서버 오류: {e}')
         return JsonResponse({'success': False, 'message': 'AI 서버 오류'}, status=500)
-        # TODO: raise http으로 변경 권장
+
+    confidence = result.get('confidence', None)
 
     # TODO: if success (200번대):
         # 테이블 정보가 있는 생성
 
 
     # Step 3. Contract(테이블) & PropertyInfo(테이블) 생성/업데이트
-    # 아래 두 방식 모두 일단 Contract 테이블의 새로운 항목이 추가되면 contract_id만 담긴 빈 테이블을 생성
-    # 이 방식이 비효율적이라 판단되면, 사용자가 직접 테이블을 작성하고 저장 버튼을 누를 때 append 되도록 해도 될 것 같긴 함 >>> TODO: 방법론 검색해보기
-
-    # 방법 1.
-    # [Contract Table] : .update_or_create()를 사용한 케이스 - 이 방식은 contract_id를 바꿀 수 없다는 치명적인 단점이 있다. (Contract의 PK가 contract_id라서...)
-    # contract, _ = Contract.objects.update_or_create(                        # 기존 chatroom_id의 계약서가 있으면 수정, 없으면 생성
-    #     chatroom_id=chatroom_id,
-    #     defaults={
-    #         'title': file.name,
-    #         'content': result.get('content'),
-    #         'size': file.size,
-    #     }
-    # )
-    # [PropertyInfo Table] : contract_id가 바뀌지 않아서 기존 PropertyInfo 레코드가 유지되므로, 새 PDF를 업로드해도 이전에 사용자가 입력한 매물 정보가 초기화되지 않음 > 수정은 가능함.
-    # PropertyInfo.objects.update_or_create(contract=contract)
-
-    # 방법 2. 방법 1의 단점 보완
     # [Contract Table]
     Contract.objects.filter(chatroom_id=chatroom_id).delete()                   # 1. 기존 Contract 레코드 삭제 (연결된 PropertyInfo도 자동 삭제)
     contract = Contract.objects.create(                                         # 2. 새 Contract 생성 (새로운 contract_id 발급)
         chatroom_id=chatroom_id,
         title=file.name,
-        content=result.get('content'),
+        content=result.get('content', ''),
         size=file.size,
     )
-    # [PropertyInfo Table]
+    # [PropertyInfo Table]: 새로운 PDF를 올리면, contract_id만 담긴 빈 테이블이 우선 생성됨.
     PropertyInfo.objects.create(contract=contract)
 
-    return JsonResponse({'success': True, 'message': '계약서 분석이 완료되었습니다'})
+    return JsonResponse({
+        'success': True,
+        'message': '계약서 분석이 완료되었습니다',
+        'confidence': confidence,                    # AI 서버가 반환한 신뢰도 값
+        'low_confidence': confidence is not None and confidence < 0.85  # 85% 미만 여부
+    })
 
 
 
-# TODO : @ 로그인권한 추가
+@login_required()
 @require_http_methods(['GET'])
 def get_contract(request, chatroom_id):
+
+    if not Chatroom.objects.filter(chatroom_id=chatroom_id, user_id=request.user).exists():
+        return JsonResponse({'success': False, 'message': '권한이 없습니다'}, status=403)
+
     try:
         contract = Contract.objects.get(chatroom_id=chatroom_id)
         property_info = PropertyInfo.objects.get(contract=contract)
@@ -103,9 +108,13 @@ def get_contract(request, chatroom_id):
     
 
 
-# TODO : @ 로그인권한 추가
+@login_required() 
 @require_http_methods(['POST'])
 def update_property(request, chatroom_id):
+
+    if not Chatroom.objects.filter(chatroom_id=chatroom_id, user_id=request.user).exists():
+        return JsonResponse({'success': False, 'message': '권한이 없습니다'}, status=403)
+
     try:
         contract = Contract.objects.get(chatroom_id=chatroom_id)
         property_info = PropertyInfo.objects.get(contract=contract)
