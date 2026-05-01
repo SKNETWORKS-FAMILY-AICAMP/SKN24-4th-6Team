@@ -1,0 +1,37 @@
+{% extends "layout/base_chat.html" %}
+{% block content %}
+
+<div class="chat-welcome">
+  <div class="welcome-logo">아이고 청년</div>
+  <h2>아이고, 무슨 걱정 있으신가요?</h2>
+  <p>계약서 PDF를 올려보세요, 더 자세한 답변을 받을 수 있어요!</p>
+  <div class="faq-chips">
+    <button class="faq-chip" onclick="startChat(this.textContent)">전세 보증금 반환 거부 시 대처 방법</button>
+    <button class="faq-chip" onclick="startChat(this.textContent)">월세 계약 중도 해지 절차와 위약금</button>
+    <button class="faq-chip" onclick="startChat(this.textContent)">집주인이 수리를 안 해줄 때 대처 방법</button>
+  </div>
+</div>
+
+<div class="chat-input-wrap">
+  <div class="chat-input-box">
+    <input type="text" id="content" placeholder="질문을 입력해주세요">
+    <button class="chat-send-btn" onclick="startChat(content.value)">↑</button>
+  </div>
+  <p class="disclaimer">이 답변은 법적 조언이 아닌 단순 정보 제공 목적입니다. 반드시 전문가와 상담하세요</p>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function startChat(text) {
+    if (!text.trim()) return;
+    const res = await api('POST', '/chat/threads', { title: '' });
+    if (res.ok) {
+      const thread = await res.json();
+      location.href = `/threads/${thread.id}/?q=${encodeURIComponent(text.trim())}`;
+    }
+  }
+  content.addEventListener('keydown', e => { if (e.key === 'Enter') startChat(content.value); });
+</script>
+{% endblock %}

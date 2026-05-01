@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>아이고청년 - 로그인</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-card-logo">아이고 청년</div>
+
+    <form id="form">
+      <div class="field">
+        <label>이메일</label>
+        <input type="email" id="email" placeholder="이메일 입력">
+        <p id="emailErr" class="error"></p>
+      </div>
+      <div class="field pw-row">
+        <label>비밀번호 <a href="/password-reset/" class="pw-find">비밀번호찾기</a></label>
+        <input type="password" id="pw" placeholder="비밀번호 입력">
+        <p id="pwErr" class="error"></p>
+      </div>
+      <button type="submit" class="btn-primary">로그인</button>
+    </form>
+
+    <button class="btn-outline" onclick="location.href='/signup/'">회원가입</button>
+  </div>
+</div>
+
+<script>
+  function getCsrf() { return document.cookie.match(/csrftoken=([^;]+)/)?.[1] ?? ''; }
+  async function api(method, url, data) {
+    return fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+      credentials: 'same-origin',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+    emailErr.textContent = '';
+    pwErr.textContent = '';
+    const res = await api('POST', '/api/users/login/', { email: email.value, password: pw.value });
+    if (res.ok) {
+      location.href = '/';
+    } else {
+      const data = await res.json();
+      const msg = data.error ?? '';
+      emailErr.textContent = msg;
+    }
+  };
+</script>
+</body>
+</html>
