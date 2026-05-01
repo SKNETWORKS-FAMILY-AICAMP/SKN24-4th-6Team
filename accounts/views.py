@@ -23,7 +23,7 @@ from .serializers import (
     UserResponseSerializer,
 )
 
-
+# TODO: 이메일 숫자 -> 문자전송으로 변경
 def generate_code(length=6):
     """6자리 숫자 인증코드 생성"""
     return ''.join(random.choices(string.digits, k=length))
@@ -40,7 +40,6 @@ class EmailSendView(APIView):
     회원가입 (purpose=SIGNUP)
     비밀번호 재설정 (purpose=RESET)
 
-    설계서 항목 2번:
     - 메일 발송 후 인증시간(3분) 동안 버튼 비활성화
     - 타이머 시작은 발송 시점 기준
     """
@@ -70,7 +69,7 @@ class EmailSendView(APIView):
             email=email,
             code=code,
             purpose=purpose,
-            expires_at=timezone.now() + timedelta(minutes=3),  # 설계서: 3분
+            expires_at=timezone.now() + timedelta(minutes=3),
         )
 
         send_mail(
@@ -120,7 +119,6 @@ class EmailVerifyView(APIView):
 class SignupView(APIView):
     """
     POST /api/users/signup/
-    SCR-USER-004
 
     플로우:
     1. EmailSendView → 인증코드 발송
@@ -195,7 +193,6 @@ class LoginView(APIView):
 class LogoutView(APIView):
     """
     POST /api/users/logout/
-    SCR-CHAT-001 항목 3-1
 
     로그아웃 확인창 → [로그아웃] 클릭 시 로그인 페이지로 이동
     logout()이 django_session 테이블에서 세션 즉시 삭제
@@ -217,13 +214,12 @@ class LogoutView(APIView):
 class PasswordResetView(APIView):
     """
     POST /api/users/password/reset/
-    SCR-USER-005
 
     플로우:
     1. EmailSendView (purpose=RESET) → 인증코드 발송
     2. EmailVerifyView → 코드 검증
     3. PasswordResetView → 새 비밀번호 저장
-    설계서 항목 8: 변경 후 SCR-USER-001(홈화면)으로 이동
+    변경 후 홈화면으로 이동
     """
     permission_classes = [AllowAny]
 
