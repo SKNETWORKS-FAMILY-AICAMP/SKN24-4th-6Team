@@ -43,7 +43,12 @@ class EmailSendSerializer(serializers.Serializer):
     """
     인증코드 발송 요청
     """
-    email = serializers.EmailField()
+    email = serializers.EmailField(
+        error_messages={
+            'blank': '이메일을 입력해주세요.',
+            'required': '이메일을 입력해주세요.',
+        }
+    )
     purpose = serializers.ChoiceField(choices=EmailVerification.Purpose.choices)
 
     def validate(self, attrs):
