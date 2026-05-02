@@ -128,16 +128,16 @@ REST_FRAMEWORK = {
 
 # ================================================================
 # 이메일
-# 설계서 SCR-USER-004 항목 2: 회원가입 인증코드 발송
-# 설계서 SCR-USER-005 항목 2: 비밀번호 재설정 인증코드 발송
 # ================================================================
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')      
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')  
 DEFAULT_FROM_EMAIL = f'아이고청년 <{os.environ.get("EMAIL_HOST_USER", "")}>'
 
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # DEBUG=True면 터미널에 출력, 운영은 Gmail SMTP 사용
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
