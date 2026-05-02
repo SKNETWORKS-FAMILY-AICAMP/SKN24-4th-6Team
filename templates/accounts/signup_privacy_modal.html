@@ -1,0 +1,39 @@
+<div class="modal-overlay" id="termsModal">
+  <div class="modal-card">
+    <h2 class="terms-modal-title">개인정보 수집·이용 동의 및 이용약관</h2>
+
+    <!-- 섹션 1: 개인정보 수집·이용 동의 (필수) -->
+    {% comment %} # TODO: 개인정보 수집·이용 동의 내용 업데이트 필요 {% endcomment %}
+    <div class="terms-section">
+      <div class="terms-content">
+        <p><strong>[개인정보 수집·이용 동의]</strong> (필수)</p>
+        내용 채워야 합니당
+      </div>
+      <label class="terms-check-row">
+        <input type="checkbox" id="termsPrivacy" onchange="checkTerms()">
+        <span>(필수) 개인정보 수집·이용에 동의합니다.</span>
+      </label>
+    </div>
+
+    <!-- 섹션 2: AI 학습 데이터 이용 동의 (선택) -->
+    {% comment %} # TODO: AI 학습 데이터 이용 동의 내용 업데이트 필요 {% endcomment %}
+    <div class="terms-section">
+      <div class="terms-content">
+        <p><strong>[AI 학습 데이터 이용 동의]</strong> (선택)</p>
+        내용 채워야 행
+      </div>
+      <label class="terms-check-row">
+        <input type="checkbox" id="termsAI">
+        <span>(선택) AI 학습 데이터 이용에 동의합니다.</span>
+      </label>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+      <button type="button" class="btn-outline" onclick="closeTermsModal()"
+              style="width:100px; margin-top:0;">취소</button>
+      <button type="button" class="btn-primary" id="termsNextBtn"
+              onclick="closeModal('termsModal'); openModal('signupModal')"
+              disabled style="width:100px; margin-top:0;">다음</button>
+    </div>
+  </div>
+</div>
