@@ -49,12 +49,19 @@ function startSignupTimer() {
   signupTimerIv = setInterval(() => {
     secs--;
     el.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
-    if (secs <= 0) { clearInterval(signupTimerIv); el.textContent = '0:00'; }
+    if (secs <= 0) {
+      clearInterval(signupTimerIv);
+      el.textContent = '0:00';
+      document.getElementById('signupCodeErr').textContent = '인증시간이 초과되었습니다.';
+      document.getElementById('signupVerifyBtn').disabled = true;
+      document.getElementById('signupSendBtn').disabled = false;
+    }
   }, 1000);
 }
 
 async function signupSendCode() {
   document.getElementById('signupEmailErr').textContent = '';
+  document.getElementById('signupCodeErr').textContent = '';
   const res = await api('POST', '/api/users/email/send/', {
     email: document.getElementById('signupEmail').value,
     purpose: 'SIGNUP',
@@ -132,12 +139,19 @@ function startResetTimer() {
   resetTimerIv = setInterval(() => {
     secs--;
     el.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
-    if (secs <= 0) { clearInterval(resetTimerIv); el.textContent = '0:00'; }
+    if (secs <= 0) {
+      clearInterval(resetTimerIv);
+      el.textContent = '0:00';
+      document.getElementById('resetCodeErr').textContent = '인증시간이 초과되었습니다.';
+      document.getElementById('resetVerifyBtn').disabled = true;
+      document.getElementById('resetSendBtn').disabled = false;
+    }
   }, 1000);
 }
 
 async function resetSendCode() {
   document.getElementById('resetEmailErr').textContent = '';
+  document.getElementById('resetCodeErr').textContent = '';
   const res = await api('POST', '/api/users/email/send/', {
     email: document.getElementById('resetEmail').value,
     purpose: 'RESET',
