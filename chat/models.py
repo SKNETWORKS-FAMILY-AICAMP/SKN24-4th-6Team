@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.db import models
+# from core.models import User
 import uuid
 
-class Chatroom(models.Model):         # AUTH_USER_MODEL = "accounts.User"
+class Chatroom(models.Model):        # AUTH_USER_MODEL = "core.User"
   user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="chatrooms")
+  # user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chatrooms")
   chatroom_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   last_chat_at = models.DateTimeField(auto_now=True)
   created_at = models.DateTimeField(auto_now_add=True)

@@ -502,3 +502,219 @@ body {
   0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
   40%            { transform: scale(1);   opacity: 1;   }
 }
+
+/* ───────────────────────────────
+   Contract Sidebar (우측)
+─────────────────────────────── */
+.contract-sidebar {
+  width: 340px;
+  min-width: 340px;
+  background-color: var(--color-bg-elevated);
+  border-left: 1px solid var(--color-border);
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.contract-sidebar--visible {
+  display: flex;
+}
+
+.contract-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background-color: var(--color-bg-elevated);
+  z-index: 10;
+}
+
+.contract-sidebar__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-fg);
+}
+
+.contract-sidebar__close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-fg-muted);
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.contract-sidebar__close:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-fg);
+}
+
+.contract-sidebar__content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Contract Section */
+.contract-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contract-section__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fg-muted);
+}
+
+/* Contract File */
+.contract-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.contract-file__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.contract-file__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contract-file__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contract-file__size {
+  font-size: 12px;
+  color: var(--color-fg-muted);
+  margin-top: 2px;
+}
+
+/* Info Table */
+.info-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--color-fg-muted);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 13px;
+  color: var(--color-fg);
+  line-height: 1.5;
+}
+
+/* Special Terms */
+.special-terms {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.special-term-item {
+  padding: 10px 12px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.special-term-text {
+  font-size: 13px;
+  color: var(--color-fg);
+  line-height: 1.6;
+}
+
+/* ───────────────────────────────
+   Upload Modal
+─────────────────────────────── */
+.modal--upload {
+  width: 400px;
+  padding: 24px;
+}
+
+.modal__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin-bottom: 20px;
+}
+
+.upload-area {
+  border: 2px dashed var(--color-border);
+  border-radius: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+  margin-bottom: 20px;
+}
+
+.upload-area:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-secondary);
+}
+
+.upload-area--dragging {
+  border-color: var(--color-primary);
+  background-color: var(--color-secondary);
+}
+
+.upload-area__icon {
+  color: var(--color-fg-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-area__text {
+  font-size: 14px;
+  color: var(--color-fg);
+  margin-bottom: 4px;
+}
+
+.upload-area__hint {
+  font-size: 12px;
+  color: var(--color-fg-muted);
+}

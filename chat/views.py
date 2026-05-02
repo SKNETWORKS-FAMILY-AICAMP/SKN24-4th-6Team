@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -12,23 +14,35 @@ from chat.serializers import (
 from chat.services import AigoAIError, append_turn
 
 
-class ChatroomListCreateView(generics.ListCreateAPIView):  # ThreadListCreateView → ChatroomListCreateView
-  serializer_class = ChatroomSerializer                    # ThreadSerializer → ChatroomSerializer
+# class ChatPageView(LoginRequiredMixin, TemplateView):
+class ChatPageView(TemplateView):
+  template_name = "chat/chat.html"
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    chatrooms = Chatroom.objects.filter(user_id=self.request.user)
+    context["chatrooms"] = chatrooms
+    context["chatroom_count"] = chatrooms.count()
+    return context
+
+
+class ChatroomListCreateView(generics.ListCreateAPIView):
+  serializer_class = ChatroomSerializer
   permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
-    return Chatroom.objects.filter(user_id=self.request.user)  # Thread → Chatroom
+    return Chatroom.objects.filter(user_id=self.request.user)
 
   def perform_create(self, serializer) -> None:
     serializer.save(user_id=self.request.user)
 
 
-class ChatroomDetailView(generics.RetrieveDestroyAPIView):  # ThreadDetailView → ChatroomDetailView
-  serializer_class = ChatroomSerializer                      # ThreadSerializer → ChatroomSerializer
+class ChatroomDetailView(generics.RetrieveDestroyAPIView):
+  serializer_class = ChatroomSerializer
   permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
-    return Chatroom.objects.filter(user_id=self.request.user).prefetch_related("chats")  # Thread → Chatroom, messages → chats
+    return Chatroom.objects.filter(user_id=self.request.user).prefetch_related("chats")
 
 
 class SendMessageView(generics.GenericAPIView):
@@ -36,7 +50,7 @@ class SendMessageView(generics.GenericAPIView):
   permission_classes = [IsAuthenticated]
 
   def post(self, request: Request, pk: int) -> Response:
-    chatroom = generics.get_object_or_404(Chatroom, pk=pk, user_id=request.user)  # thread → chatroom, Thread → Chatroom
+    chatroom = generics.get_object_or_404(Chatroom, pk=pk, user_id=request.user)
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
@@ -52,6 +66,6 @@ class SendMessageView(generics.GenericAPIView):
       )
 
     return Response(
-      ChatSerializer(assistant_message).data,  # MessageSerializer → ChatSerializer
+      ChatSerializer(assistant_message).data,
       status=status.HTTP_201_CREATED,
     )

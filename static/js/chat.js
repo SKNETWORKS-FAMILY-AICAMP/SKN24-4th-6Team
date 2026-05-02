@@ -17,12 +17,24 @@ const modalCancel       = document.getElementById("modalCancel");
 const modalLimitOverlay = document.getElementById("modalLimitOverlay");
 const modalLimitConfirm = document.getElementById("modalLimitConfirm");
 
+// 업로드 모달
+const modalUpload        = document.getElementById("modalUpload");
+const uploadArea         = document.getElementById("uploadArea");
+const fileInput          = document.getElementById("fileInput");
+const modalUploadConfirm = document.getElementById("modalUploadConfirm");
+const modalUploadCancel  = document.getElementById("modalUploadCancel");
+
+// 우측 사이드바
+const contractSidebar = document.getElementById("contractSidebar");
+const btnCloseSidebar = document.getElementById("btnCloseSidebar");
+
 /* ───────────────────────────────
    State
 ─────────────────────────────── */
 let currentChatroomId = null;   // 현재 열려 있는 채팅방 UUID
 let pendingDeleteId   = null;   // 삭제 대기 중인 채팅방 UUID
 let isLoading         = false;  // AI 응답 대기 중 여부
+let uploadedFile      = null;   // 업로드된 계약서 파일
 
 /* ───────────────────────────────
    CSRF 유틸
@@ -360,3 +372,126 @@ const activeItem = chatroomList.querySelector(".chatroom-item--active");
 if (activeItem) {
   currentChatroomId = activeItem.dataset.id;
 }
+
+/* ───────────────────────────────
+   계약서 업로드 모달
+─────────────────────────────── */
+function openUploadModal() {
+  modalUpload.classList.add("modal-overlay--visible");
+}
+
+function closeUploadModal() {
+  modalUpload.classList.remove("modal-overlay--visible");
+  fileInput.value = "";
+}
+
+// 업로드 영역 클릭
+uploadArea.addEventListener("click", () => {
+  fileInput.click();
+});
+
+// 파일 선택
+fileInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    if (file.type !== "application/pdf") {
+      alert("PDF 파일만 업로드 가능합니다.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("파일 크기는 5MB 이하여야 합니다.");
+      return;
+    }
+    uploadedFile = file;
+  }
+});
+
+// 드래그 앤 드롭
+uploadArea.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  uploadArea.classList.add("upload-area--dragging");
+});
+
+uploadArea.addEventListener("dragleave", () => {
+  uploadArea.classList.remove("upload-area--dragging");
+});
+
+uploadArea.addEventListener("drop", (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove("upload-area--dragging");
+  
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    if (file.type !== "application/pdf") {
+      alert("PDF 파일만 업로드 가능합니다.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("파일 크기는 5MB 이하여야 합니다.");
+      return;
+    }
+    uploadedFile = file;
+    fileInput.files = e.dataTransfer.files;
+  }
+});
+
+// 업로드 확인
+modalUploadConfirm.addEventListener("click", async () => {
+  if (!uploadedFile) {
+    alert("파일을 선택해주세요.");
+    return;
+  }
+
+  // TODO: 실제 업로드 API 연동
+  // 현재는 더미 데이터로 우측 사이드바 표시
+  showContractSidebar({
+    fileName: uploadedFile.name,
+    fileSize: `${(uploadedFile.size / 1024 / 1024).toFixed(1)}MB`,
+    address: "서울시 ○○구 ○○동 ○○번지",
+    period: "2025-03-01 ~ 2027-02-28(2년)",
+    deposit: "15,000만원",
+    rent: "80만원 / 매월 말일",
+    landlord: "박○ 외 1명 (총 1건)",
+    specialTerms: [
+      "1. 세입자는 입주 가기 전엔 대출을 받지 않는다."
+    ]
+  });
+
+  closeUploadModal();
+});
+
+// 업로드 취소
+modalUploadCancel.addEventListener("click", closeUploadModal);
+
+/* ───────────────────────────────
+   우측 사이드바 (계약서 정보)
+─────────────────────────────── */
+function showContractSidebar(data) {
+  document.getElementById("fileName").textContent = data.fileName;
+  document.getElementById("contractFile").querySelector(".contract-file__size").textContent = data.fileSize;
+  document.getElementById("infoAddress").textContent = data.address;
+  document.getElementById("infoPeriod").textContent = data.period;
+  document.getElementById("infoDeposit").textContent = data.deposit;
+  document.getElementById("infoRent").textContent = data.rent;
+  document.getElementById("infoLandlord").textContent = data.landlord;
+
+  const specialTermsEl = document.getElementById("specialTerms");
+  specialTermsEl.innerHTML = data.specialTerms.map(term => `
+    <div class="special-term-item">
+      <p class="special-term-text">${escapeHtml(term)}</p>
+    </div>
+  `).join("");
+
+  contractSidebar.classList.add("contract-sidebar--visible");
+}
+
+function hideContractSidebar() {
+  contractSidebar.classList.remove("contract-sidebar--visible");
+  uploadedFile = null;
+}
+
+// 우측 사이드바 닫기
+btnCloseSidebar.addEventListener("click", hideContractSidebar);
+
+// 업로드 버튼 클릭
+btnUpload.addEventListener("click", openUploadModal);
