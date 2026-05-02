@@ -13,9 +13,9 @@ environ.Env.read_env(BASE_DIR / '.env')
 # ================================================================
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-only-do-not-use-in-prod')  # .env: DJANGO_SECRET_KEY
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')  # .env: ALLOWED_HOSTS
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')  # .env: ALLOWED_HOSTS
 
 
 # ================================================================
