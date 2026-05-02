@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>아이고청년</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/accounts/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chat/chat.css' %}">
 </head>
 <body class="chat-body">
 
 <aside class="sidebar">
-  <div class="sidebar-logo">아이고 청년</div>
+  <img src="{% static 'img/main_img.svg' %}" alt="아이고 청년" class="sidebar-logo">
   <button class="sidebar-new-btn" onclick="newChat()">+ 새채팅</button>
   <p class="sidebar-label">최근 대화</p>
   <ul id="sidebarList" class="sidebar-list"></ul>
@@ -39,7 +40,7 @@
   async function doLogout() {
     if (!confirm('정말 로그아웃 하시겠어요?')) return;
     await api('POST', '/api/users/logout/');
-    location.href = '/login/';
+    location.href = '/home/';
   }
   async function loadSidebar() {
     const res = await api('GET', '/chat/threads');
