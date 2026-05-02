@@ -8,7 +8,6 @@ from chat.models import Chatroom
 from .models import Contract, PropertyInfo
 
 
-# TODO : 원할한 tests.py 수행을 위해서는 config/settings.py의 INSTALLED_APPS에 'contract' 추가 및 config/urls.py에 path('contract/', include('contract.urls)) 추가 필수!!
 
 User = get_user_model()
 

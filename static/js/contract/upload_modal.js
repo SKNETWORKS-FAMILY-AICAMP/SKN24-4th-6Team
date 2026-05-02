@@ -108,7 +108,7 @@ async function uploadToServer(file) {
   formData.append('file', file);
 
   try {
-    const response = await fetch(`/api/v1/contract/${chatroomId}/upload/`, {
+    const response = await fetch(`/contract/${chatroomId}/upload/`, {
       method: 'POST',
       headers: { 'X-CSRFToken': getCookie('csrftoken') },
       body: formData,
@@ -180,7 +180,7 @@ function openUploadModal() {
 
 // ── 계약서 정보 갱신 (우측 바) ──
 function refreshContractInfo(chatroomId) {
-  fetch(`/api/v1/contract/${chatroomId}/`)
+  fetch(`/contract/${chatroomId}/`)
     .then(res => res.json())
     .then(data => {
       if (data.success) {

@@ -14,7 +14,7 @@ document.addEventListener('contractUpdated', (e) => {
 // ── 계약서 정보 조회 ──
 async function loadContractInfo(chatroomId) {
   try {
-    const response = await fetch(`/api/v1/contract/${chatroomId}/`, {
+    const response = await fetch(`/contract/${chatroomId}/`, {
       headers: { 'X-CSRFToken': getCookie('csrftoken') }
     });
     const data = await response.json();
@@ -110,7 +110,7 @@ async function savePropertyInfo(e) {
   });
 
   try {
-    const response = await fetch(`/api/v1/contract/${chatroomId}/property/`, {
+    const response = await fetch(`/contract/${chatroomId}/property/`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': getCookie('csrftoken'),
@@ -158,7 +158,7 @@ async function saveSpecialTerms(e) {
   });
 
   try {
-    const response = await fetch(`/api/v1/contract/${chatroomId}/terms/`, {
+    const response = await fetch(`/contract/${chatroomId}/terms/`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': getCookie('csrftoken'),
