@@ -1,0 +1,193 @@
+@import "../tokens.css";
+
+/* -- 마이페이지 모달 -- */
+
+.mypage-card {
+  max-width: 480px;
+  padding: 28px 32px 24px;
+}
+
+/* ── 헤더 (뒤로가기 + 타이틀) ── */
+.mypage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  color: var(--color-fg);
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.back-btn:hover {
+  background: var(--color-secondary);
+}
+
+.mypage-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-fg);
+}
+
+
+/* -- 프로필 (아이콘 + 닉네임 + 이메일) -- */
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--color-bg-chip);
+  border-radius: 12px;
+  margin-bottom: 28px;
+}
+
+.profile-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--color-primary);
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-nickname {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin-bottom: 2px;
+}
+
+.profile-email {
+  font-size: 13px;
+  color: var(--color-fg-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* -- 회원 정보 수정 -- */
+
+.edit-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fg);
+  margin-bottom: 14px;
+}
+
+
+/* -- 탈퇴하기 텍스트 링크 -- */
+
+.withdraw-link {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 12px 0;
+  margin-top: 16px;
+  background: transparent;
+  border: none;
+  color: var(--color-fg-muted);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.withdraw-link:hover {
+  color: var(--color-red);
+}
+
+
+/* -- 탈퇴 확인 팝업 -- */
+
+.confirm-card {
+  max-width: 360px;
+  padding: 32px 28px 24px;
+  text-align: center;
+}
+
+.confirm-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #FFF5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--color-red);
+}
+
+.confirm-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-fg);
+  margin-bottom: 12px;
+}
+
+.confirm-description {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-fg-soft);
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  background: var(--color-bg-chip);
+  border-radius: 8px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-actions .btn-danger,
+.confirm-actions .btn-outline {
+  flex: 1;
+  margin-top: 0;
+  height: 44px;
+  font-size: 14px;
+}
+
+/* 위험 버튼 (탈퇴 확정) */
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-red);
+  color: var(--color-white);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
