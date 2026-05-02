@@ -165,6 +165,8 @@ STORAGES = {
 # 외부 서비스
 # ================================================================
 AIGO_AI_BASE_URL = os.environ.get('AIGO_AI_BASE_URL', 'http://localhost:8001')  # .env: AIGO_AI_BASE_URL
+AIGO_AI_INTERNAL_API_KEY = os.environ.get('AIGO_AI_INTERNAL_API_KEY', '')
+AIGO_AI_REQUEST_TIMEOUT = float(os.environ.get('AIGO_AI_REQUEST_TIMEOUT', '120'))
 
 
 # ================================================================
