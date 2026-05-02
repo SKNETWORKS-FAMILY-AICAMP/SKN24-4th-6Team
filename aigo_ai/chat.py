@@ -95,6 +95,16 @@ def stream_chat(
         elif line.startswith("data:"):
           buffer_data.append(line[len("data:") :].lstrip())
 
+  except httpx.NetworkError as e:
+    # ConnectError / ReadError / WriteError / CloseError 등 네트워크 계층 실패
+    logger.error("[aigo-ai] network error: %s", str(e))
+    yield _emit(
+      "error",
+      {
+        "code": "UPSTREAM_NETWORK",
+        "message": f"[aigo-ai] network error: {str(e)}",
+      },
+    )
   except httpx.RequestError as e:
     logger.error("[aigo-ai] request error: %s", str(e))
     yield _emit(

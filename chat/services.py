@@ -1,54 +1,73 @@
-"""Business logic for chat: persist user/assistant turns and proxy to aigo-ai."""
+import logging
+from collections.abc import Iterator
 
-from __future__ import annotations
-
-import httpx
-from django.conf import settings
-
+from aigo_ai import stream_chat
+from aigo_ai.errors import AigoAIError
 from chat.models import Chat, Chatroom
 
+logger = logging.getLogger(__name__)
 
-class AigoAIError(RuntimeError):
-  """Raised when the upstream RAG service fails or returns malformed data."""
+_HISTORY_LIMIT = 20
 
-
-def ask_aigo_ai(question: str, *, timeout: float = 30.0) -> str:
-  """Forward a single user question to the aigo-ai FastAPI service.
-
-  Returns the assistant's answer as a plain string. Raises AigoAIError on any
-  network or schema failure so callers can map it to a 502.
-  """
-  base_url = settings.AIGO_AI_BASE_URL.rstrip("/")
-  try:
-    response = httpx.post(
-      f"{base_url}/chat",
-      json={"question": question},
-      timeout=timeout,
-    )
-    response.raise_for_status()
-    data = response.json()
-  except httpx.HTTPError as exc:
-    raise AigoAIError(f"aigo-ai request failed: {exc}") from exc
-
-  answer = data.get("answer")
-  if not isinstance(answer, str):
-    raise AigoAIError("aigo-ai response missing 'answer' field")
-  return answer
+__all__ = ["AigoAIError", "stream_chat_turn"]
 
 
-def append_turn(chatroom: Chatroom, *, user_content: str) -> Chat:
-  """Persist a user message, call aigo-ai, persist the assistant reply.
+def _build_history(chatroom: Chatroom) -> list[dict]:
+  """최근 메시지를 aigo-ai history 포맷으로 변환"""
+  recent = list(chatroom.chats.order_by("-created_at").values("role", "content")[:_HISTORY_LIMIT])
+  return [
+    {"role": row["role"], "content": row["content"] or ""}
+    for row in reversed(recent)
+    if row["role"] in {Chat.Role.USER, Chat.Role.ASSISTANT}
+  ]
 
-  Returns the assistant Message. The user Message is also created as a side
-  effect — caller can inspect via thread.messages.
-  """
-  Chat.objects.create(chatroom_id=chatroom, role=Chat.Role.USER, content=user_content)
-  answer = ask_aigo_ai(user_content)
 
-  assistant_message = Chat.objects.create(
+def _persist_assistant(chatroom: Chatroom, content: str) -> None:
+  """assistant 메시지를 DB에 저장"""
+  if not content:
+    return
+  Chat.objects.create(
     chatroom_id=chatroom,
-    role=Chat.Role.ASSISTANT,  # Message → Chat
-    content=answer,
+    role=Chat.Role.ASSISTANT,
+    content=content,
   )
   chatroom.save(update_fields=["last_chat_at"])
-  return assistant_message
+
+
+def stream_chat_turn(
+  chatroom: Chatroom,
+  *,
+  user_content: str,
+  user_id: str,
+) -> Iterator[bytes]:
+  """user 메시지를 즉시 저장 → aigo-ai SSE 를 그대로 yield → message_end 시 assistant 저장"""
+  Chat.objects.create(
+    chatroom_id=chatroom,
+    role=Chat.Role.USER,
+    content=user_content,
+  )
+
+  history = _build_history(chatroom)
+  tokens: list[str] = []
+  completed = False
+
+  # aigo-ai SSE 이벤트 핸들러
+  def _on_event(event: str, data: dict) -> None:
+    nonlocal completed
+    if event == "token":
+      delta = data.get("delta")
+      if isinstance(delta, str):
+        tokens.append(delta)
+    elif event == "message_end":
+      completed = True
+
+  yield from stream_chat(
+    query=user_content,
+    history=history[:-1],
+    user_id=str(user_id),
+    chatroom_id=str(chatroom.chatroom_id),
+    on_event=_on_event,
+  )
+
+  if completed:
+    _persist_assistant(chatroom, "".join(tokens))

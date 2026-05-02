@@ -4,60 +4,72 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 
-from chat.models import Thread
+from chat.models import Chatroom
 
 
 @pytest.fixture
-def auth_client() -> tuple[APIClient, "object"]:
-  user = get_user_model().objects.create_user(username="dana", password="x")
+def auth_client(db):
+  """인증된 APIClient와 해당 사용자 반환"""
+  user = get_user_model().objects.create_user(
+    email="dana@example.com",
+    nickname="dana",
+    password="x",
+  )
   client = APIClient()
   client.force_authenticate(user=user)
   return client, user
 
 
-@pytest.mark.django_db
-def test_unauthenticated_thread_list_is_401() -> None:
+def test_unauthenticated_chatroom_list_blocked(db) -> None:
+  """인증되지 않은 사용자는 채팅방 목록 API 접근 불가"""
   client = APIClient()
-  response = client.get("/chat/threads")
-  assert response.status_code == 401
+  response = client.get("/api/v1/chatrooms")
+  # SessionAuthentication + IsAuthenticated → 401 또는 403
+  assert response.status_code in (401, 403)
 
 
-@pytest.mark.django_db
-def test_create_thread_assigns_current_user(auth_client) -> None:
+def test_create_chatroom_assigns_current_user(auth_client) -> None:
+  """채팅방 생성 시 현재 사용자가 user_id 로 저장되는지 검증"""
   client, user = auth_client
-  response = client.post("/chat/threads", {"title": "t1"}, format="json")
+  response = client.post("/api/v1/chatrooms", {"title": "t1"}, format="json")
   assert response.status_code == 201
-  assert Thread.objects.get(pk=response.data["id"]).user == user
+  assert Chatroom.objects.get(pk=response.data["chatroom_id"]).user_id == user
 
 
-@pytest.mark.django_db
-def test_thread_list_only_shows_own_threads(auth_client) -> None:
+def test_chatroom_list_only_shows_own_rooms(auth_client) -> None:
+  """사용자는 자신의 채팅방 목록만 조회할 수 있는지 검증"""
   client, user = auth_client
-  Thread.objects.create(user=user, title="mine")
-  other = get_user_model().objects.create_user(username="other", password="x")
-  Thread.objects.create(user=other, title="not mine")
-  response = client.get("/chat/threads")
-  titles = [t["title"] for t in response.data]
+  Chatroom.objects.create(user_id=user, title="mine")
+  other = get_user_model().objects.create_user(
+    email="other@example.com", nickname="oth", password="x"
+  )
+  Chatroom.objects.create(user_id=other, title="not mine")
+  response = client.get("/api/v1/chatrooms")
+  titles = [r["title"] for r in response.data]
   assert titles == ["mine"]
 
 
-@pytest.mark.django_db
-@patch("chat.views.append_turn")
-def test_send_message_returns_assistant_reply(mock_append, auth_client) -> None:
+@patch("chat.views.stream_chat_turn")
+def test_send_message_returns_event_stream(mock_stream, auth_client) -> None:
+  """메시지 전송 시 stream_chat_turn() 의 결과를 SSE 형식으로 반환하는지 검증"""
   client, user = auth_client
-  thread = Thread.objects.create(user=user, title="t")
-  from chat.models import Message
+  room = Chatroom.objects.create(user_id=user, title="t")
 
-  mock_append.return_value = Message(
-    thread=thread,
-    role=Message.Role.ASSISTANT,
-    content="hi",
+  mock_stream.return_value = iter(
+    [
+      b'event: token\ndata: {"delta": "hi"}\n\n',
+      b"event: message_end\ndata: {}\n\n",
+    ]
   )
+
   response = client.post(
-    f"/chat/threads/{thread.pk}/messages",
+    f"/api/v1/chatrooms/{room.pk}/messages",
     {"content": "안녕"},
     format="json",
   )
-  assert response.status_code == 201
-  assert response.data["content"] == "hi"
-  mock_append.assert_called_once()
+
+  assert response.status_code == 200
+  assert response["Content-Type"].startswith("text/event-stream")
+  body = b"".join(response.streaming_content)
+  assert b"event: token" in body
+  mock_stream.assert_called_once()
