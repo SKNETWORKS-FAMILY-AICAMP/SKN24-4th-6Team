@@ -12,11 +12,8 @@ import logging
 @login_required()                                                           # settings.py에서 LOGIN_URL을 설정했으면 이렇게 두고, 아니라면 login_url = ''
 @require_http_methods(['POST'])                                             # POST 요청만 허용
 def upload_contract(request, chatroom_id):                                  # URL에서 어느 채팅방(chatroom_id)의 계약서인지 받기
-                                                                            # 문제: 피그마 상에서는 채팅방 생성 화면에서 pdf를 받을 수 있게 되어있는데, 현재 정의한 함수에서는 chatroom_id를 무조건 받게 되어있다는 점
-                                                                                # 이렇게 되면 첫 쿼리를 보낸 후에야 pdf를 업로드 할 수 있게 된다.
-                                                                                    # -> 이렇게 되면 채팅방 생성 화면에서는 pdf 업로드를 막거나 : 사용자 편의만 보면 이 방향으로 가기도 애매함.
-                                                                                    # -> 채팅방 생성 화면에서 pdf를 올리는 그 순간 chatroom_id도 만들어지게 하거나 : 그럼 query는 입력하지 않고 pdf를 올린 채팅방에 대한 취급을 별도로 처리해줘야 해서 로직이 복잡해짐.
-                                                                                    # -> 채팅방 생성 누르면 채팅방 id 부여: 흠.. 지지해질 거 같은데 지지해...
+        # 피그마 상에서는 채팅방 생성 화면에서 pdf를 받을 수 있게 되어있는데, 현재 정의한 함수에서는 chatroom_id를 무조건 받게 되어있음.
+            # 개선 -> 채팅방 생성 누르면 chatroom_id 부여
 
     # Step 0. 채팅방 유저와 조작자가 일치하는지를 확인
     if not Chatroom.objects.filter(chatroom_id=chatroom_id, user_id=request.user).exists():
@@ -39,9 +36,9 @@ def upload_contract(request, chatroom_id):                                  # UR
     # Step 2. FastAPI AI 서버로 파일 바이트 전송 및 예외 상황 처리
     try:
         response = requests.post(
-            settings.INFER_URL,                                             # config의 settings.py에 있는 FastAPI 서버 주소
+            settings.AIGO_AI_BASE_URL + '/v1/pdf/analyze',                      # config의 settings.py에 있는 FastAPI 서버 주소
             files={'file': (file.name, file.read(), 'application/pdf')},
-            # timeout=settings.INFER_TIMEOUT                                  # config의 settings.py에 있는 timeout 값 # TODO: 타임아웃 설정하실 겁니까?
+            timeout=60                                                          # TODO: settings.py 타임아웃 변수 설정할 것인지 여부
         )
         result = response.json()
     except requests.exceptions.Timeout:
@@ -72,8 +69,8 @@ def upload_contract(request, chatroom_id):                                  # UR
     return JsonResponse({
         'success': True,
         'message': '계약서 분석이 완료되었습니다',
-        'confidence': confidence,                    # AI 서버가 반환한 신뢰도 값
-        'low_confidence': confidence is not None and confidence < 0.85  # 85% 미만 여부
+        'confidence': confidence,                                               # AI 서버가 반환한 신뢰도 값
+        'low_confidence': confidence is not None and confidence < 0.85          # 85% 미만 여부
     })
 
 
@@ -106,7 +103,7 @@ def get_contract(request, chatroom_id):
             }
         })
     except Contract.DoesNotExist:
-        return JsonResponse({'success': False, 'message': '계약서가 없습니다'}, status=404)
+        return JsonResponse({'success': False, 'message': '계약서 정보가 없습니다'}, status=404)
     
 
 
@@ -131,4 +128,21 @@ def update_property(request, chatroom_id):
 
         return JsonResponse({'success': True, 'message': '매물 정보가 수정되었습니다'})
     except Contract.DoesNotExist:
-        return JsonResponse({'success': False, 'message': '계약서가 없습니다'}, status=404)
+        return JsonResponse({'success': False, 'message': '계약서 정보가 없습니다'}, status=404)
+    
+
+
+@login_required()
+@require_http_methods(['POST'])
+def update_terms(request, chatroom_id):
+
+    if not Chatroom.objects.filter(chatroom_id=chatroom_id, user_id=request.user).exists():
+        return JsonResponse({'success': False, 'message': '권한이 없습니다'}, status=403)
+
+    try:
+        contract = Contract.objects.get(chatroom_id=chatroom_id)
+        contract.content = request.POST.get('content', contract.content)
+        contract.save()
+        return JsonResponse({'success': True, 'message': '특약 정보가 수정되었습니다'})
+    except Contract.DoesNotExist:
+        return JsonResponse({'success': False, 'message': '계약서 정보가 없습니다'}, status=404)
