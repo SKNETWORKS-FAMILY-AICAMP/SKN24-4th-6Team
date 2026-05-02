@@ -15,7 +15,7 @@
     <aside class="sidebar">
       <div class="sidebar__header">
         <div class="sidebar__logo">
-          <img src="{% static 'images/logo.png' %}" alt="아이고 청년" class="sidebar__logo-img">
+          <img src="{% static 'img/main_img.svg' %}" alt="아이고 청년" class="sidebar__logo-img">
         </div>
         <button class="btn-new-chat" id="btnNewChat">
           <span class="btn-new-chat__icon">+</span>
@@ -57,11 +57,23 @@
     <!-- 메인 채팅 영역 -->
     <main class="chat-main" id="chatMain">
 
+      <!-- 헤더 -->
+      <div class="chat-header">
+        <button class="chat-header__toggle" id="btnToggleSidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h1 class="chat-header__title" id="chatTitle">새 채팅</h1>
+      </div>
+
       <!-- 초기 화면 -->
       <div class="chat-welcome" id="chatWelcome">
         <div class="chat-welcome__inner">
           <div class="chat-welcome__logo">
-            <img src="{% static 'images/logo.png' %}" alt="아이고 청년">
+            <img src="{% static 'img/main_img.svg' %}" alt="아이고 청년">
           </div>
           <h1 class="chat-welcome__title">아이고, 무슨 걱정 있으신가요?</h1>
           <p class="chat-welcome__subtitle">계약서 PDF를 올려보세요. 더 자세한 답변을 받을 수 있어요!</p>
