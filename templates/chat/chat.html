@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아이고 청년</title>
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+</head>
+<body>
+  <div class="layout">
+
+    <!-- 좌측 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar__header">
+        <div class="sidebar__logo">
+          <img src="{% static 'images/logo.png' %}" alt="아이고 청년" class="sidebar__logo-img">
+        </div>
+        <button class="btn-new-chat" id="btnNewChat">
+          <span class="btn-new-chat__icon">+</span>
+          새채팅
+        </button>
+      </div>
+
+      <div class="sidebar__section">
+        <p class="sidebar__section-title">대화 ({{ chatroom_count }}/10)</p>
+        <ul class="chatroom-list" id="chatroomList">
+          {% for chatroom in chatrooms %}
+          <li class="chatroom-item {% if chatroom.chatroom_id == current_chatroom_id %}chatroom-item--active{% endif %}"
+              data-id="{{ chatroom.chatroom_id }}">
+            <span class="chatroom-item__title">{{ chatroom.title|default:"새 채팅" }}</span>
+            <button class="chatroom-item__menu" data-id="{{ chatroom.chatroom_id }}">···</button>
+          </li>
+          {% empty %}
+          <li class="chatroom-list__empty">대화 내역이 없습니다.</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="sidebar__footer">
+        <div class="sidebar__user">
+          <div class="sidebar__user-avatar">{{ request.user.username|first|upper }}</div>
+          <span class="sidebar__user-name">{{ request.user.username }}</span>
+        </div>
+        <div class="sidebar__user-actions">
+          <a href="#" class="sidebar__icon-btn" title="프로필">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </a>
+          <a href="#" class="sidebar__icon-btn" title="로그아웃">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 메인 채팅 영역 -->
+    <main class="chat-main" id="chatMain">
+
+      <!-- 초기 화면 -->
+      <div class="chat-welcome" id="chatWelcome">
+        <div class="chat-welcome__inner">
+          <div class="chat-welcome__logo">
+            <img src="{% static 'images/logo.png' %}" alt="아이고 청년">
+          </div>
+          <h1 class="chat-welcome__title">아이고, 무슨 걱정 있으신가요?</h1>
+          <p class="chat-welcome__subtitle">계약서 PDF를 올려보세요. 더 자세한 답변을 받을 수 있어요!</p>
+        </div>
+      </div>
+
+      <!-- 채팅 메시지 영역 (초기엔 숨김) -->
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <!-- 입력 영역 -->
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <button class="chat-input__upload-btn" id="btnUpload" title="계약서 업로드">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <textarea class="chat-input__textarea" id="chatInput"
+            placeholder="질문을 입력해주세요"
+            rows="1"
+            maxlength="1000"></textarea>
+          <button class="chat-input__send-btn" id="btnSend" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+        <p class="chat-input__disclaimer">
+          이 답변은 법적 조언이 아닌 단순 정보 제공 목적입니다. 반드시 전문가와 상담하세요
+          <a href="#" class="chat-input__disclaimer-link">개인정보처리방침</a>
+        </p>
+      </div>
+
+    </main>
+
+    <!-- 우측 사이드바 (계약서 정보) -->
+    <aside class="contract-sidebar" id="contractSidebar">
+      <div class="contract-sidebar__header">
+        <h2 class="contract-sidebar__title">계약서 정보</h2>
+        <button class="contract-sidebar__close" id="btnCloseSidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="contract-sidebar__content">
+        <!-- 계약서 파일 -->
+        <div class="contract-section">
+          <h3 class="contract-section__title">계약서 정보</h3>
+          <div class="contract-file" id="contractFile">
+            <div class="contract-file__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            </div>
+            <div class="contract-file__info">
+              <p class="contract-file__name" id="fileName">홍길동_임대차계약서.pdf</p>
+              <p class="contract-file__size">5MB</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 매물 정보 -->
+        <div class="contract-section">
+          <h3 class="contract-section__title">매물 정보</h3>
+          <div class="info-table">
+            <div class="info-row">
+              <span class="info-label">소재지</span>
+              <span class="info-value" id="infoAddress">서울시 ○○구 ○○동 ○○번지</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">임대차 기간</span>
+              <span class="info-value" id="infoPeriod">2025-03-01 ~ 2027-02-28(2년)</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">보증금</span>
+              <span class="info-value" id="infoDeposit">15,000만원</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">월세</span>
+              <span class="info-value" id="infoRent">80만원 / 매월 말일</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">임대인</span>
+              <span class="info-value" id="infoLandlord">박○ 외 1명 (총 1건)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 특약 정보 -->
+        <div class="contract-section">
+          <h3 class="contract-section__title">특약 정보</h3>
+          <div class="special-terms" id="specialTerms">
+            <div class="special-term-item">
+              <p class="special-term-text">1. 세입자는 입주 가기 전엔 대출을 받지 않는다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- 계약서 업로드 모달 -->
+  <div class="modal-overlay" id="modalUpload">
+    <div class="modal modal--upload">
+      <h3 class="modal__title">계약서 업로드</h3>
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-area__icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <p class="upload-area__text">파일을 끌어다 놓거나 클릭하여 업로드</p>
+        <p class="upload-area__hint">PDF · 최대 5MB</p>
+        <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+      </div>
+      <div class="modal__actions">
+        <button class="modal__btn modal__btn--primary" id="modalUploadConfirm">업로드</button>
+        <button class="modal__btn modal__btn--cancel" id="modalUploadCancel">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 채팅방 삭제 확인 모달 -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <p class="modal__text">정말 채팅방을 삭제하시겠어요?</p>
+      <div class="modal__actions">
+        <button class="modal__btn modal__btn--danger" id="modalConfirm">삭제</button>
+        <button class="modal__btn modal__btn--cancel" id="modalCancel">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 채팅방 10개 초과 알림 모달 -->
+  <div class="modal-overlay" id="modalLimitOverlay">
+    <div class="modal">
+      <p class="modal__text">채팅방은 최대 10개까지만 만들 수 있어요<br>사용하지 않는 채팅방을 삭제 후 다시 시도해주세요</p>
+      <div class="modal__actions">
+        <button class="modal__btn modal__btn--primary" id="modalLimitConfirm">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/chat.js' %}"></script>
+</body>
+</html>
