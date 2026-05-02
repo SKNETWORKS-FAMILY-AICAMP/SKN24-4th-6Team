@@ -9,4 +9,4 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ['is_verified', 'is_admin']
     search_fields = ['email', 'nickname']
     ordering = ['-created_at']
-    readonly_fields = ['user_id', 'created_at', 'update_at']
+    readonly_fields = ['user_id', 'created_at']

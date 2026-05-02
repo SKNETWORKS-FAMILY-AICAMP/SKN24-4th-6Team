@@ -23,15 +23,55 @@ from .serializers import (
     UserResponseSerializer,
 )
 
-# TODO: 이메일 숫자 -> 문자전송으로 변경
+# 6자리 문자전송
 def generate_code(length=6):
-    """6자리 숫자 인증코드 생성"""
-    return ''.join(random.choices(string.digits, k=length))
+    """6자리 영문 대문자 인증코드 생성"""
+    return ''.join(random.choices(string.ascii_uppercase, k=length))
 
 
 # ================================================================
 # 이메일 인증 공통
 # ================================================================
+
+class EmailVerificationView(APIView):
+    """
+    POST /auth/email-verification
+    code 없음 → 인증코드 발송
+    code 있음 → 인증코드 검증
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        if request.data.get('code'):
+            serializer = EmailVerifySerializer(data=request.data)
+            if not serializer.is_valid():
+                return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            verification = serializer.validated_data['verification']
+            verification.is_verified = True
+            verification.save()
+            return Response({'message': '인증이 완료되었습니다.'}, status=status.HTTP_200_OK)
+
+        serializer = EmailSendSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data['email']
+        purpose = serializer.validated_data['purpose']
+        code = generate_code()
+
+        EmailVerification.objects.filter(email=email, purpose=purpose, is_verified=False).delete()
+        EmailVerification.objects.create(
+            email=email, code=code, purpose=purpose,
+            expires_at=timezone.now() + timedelta(minutes=3),
+        )
+        send_mail(
+            subject='[아이고청년] 이메일 인증 코드',
+            message=f'인증 코드: {code}\n유효시간: 3분',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+        return Response({'message': '인증코드가 발송되었습니다.'}, status=status.HTTP_200_OK)
+
 
 class EmailSendView(APIView):
     """
@@ -150,14 +190,7 @@ class SignupView(APIView):
 # ================================================================
 
 class LoginView(APIView):
-    """
-    POST /api/users/login/
-
-    이메일 형식 오류
-    미가입 이메일
-    비밀번호 불일치
-    → 보안상 이메일/비밀번호 구분 없이 동일 메시지 반환
-    """
+    """POST /api/users/login/"""
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -172,11 +205,17 @@ class LoginView(APIView):
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
 
+        if not User.objects.filter(email=email).exists():
+            return Response(
+                {'field': 'email', 'error': '등록되지 않은 이메일입니다.'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
         user = authenticate(request, email=email, password=password)
 
         if user is None:
             return Response(
-                {'error': '이메일 또는 비밀번호가 올바르지 않습니다.'},
+                {'field': 'password', 'error': '비밀번호가 올바르지 않습니다.'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
@@ -299,6 +338,23 @@ class SelfVerifyView(APIView):
             {'message': '본인인증이 완료되었습니다.'},
             status=status.HTTP_200_OK
         )
+
+
+class MePasswordView(APIView):
+    """PUT /api/user/me/password — 로그인 상태에서 비밀번호 변경"""
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        user.set_password(serializer.validated_data['password'])
+        user.save()
+        logout(request)
+
+        return Response({'message': '비밀번호가 변경되었습니다.'}, status=status.HTTP_200_OK)
 
 
 class MeView(APIView):
