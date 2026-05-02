@@ -8,7 +8,6 @@ from chat.models import Chatroom
 from .models import Contract, PropertyInfo
 
 
-# TODO : 원할한 tests.py 수행을 위해서는 config/settings.py의 INSTALLED_APPS에 'contract' 추가 및 config/urls.py에 path('contract/', include('contract.urls)) 추가 필수!!
 
 User = get_user_model()
 
@@ -26,7 +25,7 @@ class ContractTest(TestCase):
         self.client.login(email='test@test.com', password='testpass123')
 
     # ── TC-13: PDF 업로드 → OCR → SCR-CHAT-003 계약서 정보 확인 ──
-    @patch('contract.views.requests.post')
+    @patch('contract.views.httpx.post')
     def test_TC13_upload_pdf_success(self, mock_post):
         """
         Happy Path
@@ -92,7 +91,7 @@ class ContractTest(TestCase):
         self.assertIn('5MB', data['message'])
 
     # ── TC-27: OCR 신뢰도 낮은 경우 (Edge Case) ──
-    @patch('contract.views.requests.post')
+    @patch('contract.views.httpx.post')
     def test_TC27_low_ocr_confidence(self, mock_post):
         """
         Edge Case
@@ -184,7 +183,7 @@ class ContractTest(TestCase):
         self.assertEqual(property_info.month_rent, 100)  # 기존 값 유지
 
     # ── TC-29: PII 마스킹 확인 ──
-    @patch('contract.views.requests.post')
+    @patch('contract.views.httpx.post')
     def test_TC29_pii_masking(self, mock_post):
         """
         Happy Path

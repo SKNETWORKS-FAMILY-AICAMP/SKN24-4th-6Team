@@ -1,4 +1,4 @@
-import requests
+import httpx
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -35,13 +35,13 @@ def upload_contract(request, chatroom_id):                                  # UR
 
     # Step 2. FastAPI AI 서버로 파일 바이트 전송 및 예외 상황 처리
     try:
-        response = requests.post(
+        response = httpx.post(
             settings.AIGO_AI_BASE_URL + '/v1/pdf/analyze',                      # config의 settings.py에 있는 FastAPI 서버 주소
             files={'file': (file.name, file.read(), 'application/pdf')},
             timeout=60                                                          # TODO: settings.py 타임아웃 변수 설정할 것인지 여부
         )
         result = response.json()
-    except requests.exceptions.Timeout:
+    except httpx.exceptions.Timeout:
         return JsonResponse({'success': False, 'message': 'AI 서버 응답 시간 초과'}, status=504)
     except Exception as e:
         logger = logging.getLogger(__name__)
