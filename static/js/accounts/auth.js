@@ -25,7 +25,7 @@ document.getElementById('loginForm').onsubmit = async e => {
   });
 
   if (res.ok) {
-    location.href = '/';
+    location.href = '/threads/';
   } else {
     const data = await res.json();
     if (data.field === 'password') {
