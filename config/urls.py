@@ -15,6 +15,7 @@ urlpatterns = [
   path("signup/", TemplateView.as_view(template_name="accounts/signup.html"), name="page-signup"),
   path("password-reset/", TemplateView.as_view(template_name="accounts/password_reset.html"), name="page-password-reset"),
   path("", TemplateView.as_view(template_name="index.html"), name="page-home"),
+  path("mypage/", TemplateView.as_view(template_name="accounts/mypage.html"), name="page-mypage"),
 
   # API URLs
 ]
