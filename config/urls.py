@@ -14,7 +14,7 @@ urlpatterns = [
   path("login/", TemplateView.as_view(template_name="accounts/login.html"), name="page-login"),
   path("signup/", TemplateView.as_view(template_name="accounts/signup.html"), name="page-signup"),
   path("password-reset/", TemplateView.as_view(template_name="accounts/password_reset.html"), name="page-password-reset"),
-  path("", TemplateView.as_view(template_name="home.html"), name="page-home"),
+  path("", TemplateView.as_view(template_name="index.html"), name="page-home"),
   path("threads/", TemplateView.as_view(template_name="chat/thread_list.html"), name="page-thread-list"),
   path("threads/<uuid:pk>/", TemplateView.as_view(template_name="chat/thread_detail.html"), name="page-thread-detail"),
 
