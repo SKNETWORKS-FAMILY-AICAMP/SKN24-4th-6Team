@@ -11,9 +11,8 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
-  chats = ChatSerializer(
-    many=True, read_only=True
-  )  # 채팅방 조회 시 메시지 목록도 중첩해서 함께 반환
+  chats = ChatSerializer(many=True, read_only=True)   # 채팅방 조회 시 메시지 목록도 중첩해서 함께 반환
+  title = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")  # [수정] 빈 문자열/null 허용 — 새채팅 생성 시 title="" 전송 대응
 
   class Meta:
     model = Chatroom

@@ -128,7 +128,7 @@ class SignupSerializer(serializers.Serializer):
         if not EmailVerification.objects.filter(
             email=value,
             purpose=EmailVerification.Purpose.SIGNUP,
-            is_verified=True
+            is_verified=True,
         ).exists():
             raise serializers.ValidationError('이메일 인증이 완료되지 않았습니다.')
 
@@ -189,7 +189,7 @@ class PasswordResetSerializer(serializers.Serializer):
         if not EmailVerification.objects.filter(
             email=value,
             purpose=EmailVerification.Purpose.RESET,
-            is_verified=True
+            is_verified=True,
         ).exists():
             raise serializers.ValidationError('이메일 인증이 완료되지 않았습니다.')
         return value

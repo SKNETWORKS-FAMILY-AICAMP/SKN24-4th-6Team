@@ -46,6 +46,7 @@ function getCsrfToken() {
 
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, {
+    credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
       "X-CSRFToken": getCsrfToken(),

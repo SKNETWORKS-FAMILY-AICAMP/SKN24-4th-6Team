@@ -41,10 +41,12 @@ class ChatroomListCreateView(generics.ListCreateAPIView):
   """채팅방 목록 조회 및 생성"""
 
   serializer_class = ChatroomSerializer
-  permission_classes = [IsAuthenticated]
+  permission_classes = [IsAuthenticated] # 잠시 비활성
+  # permission_classes = [AllowAny]
 
   def get_queryset(self):
     return Chatroom.objects.filter(user_id=self.request.user)
+  
 
   def perform_create(self, serializer) -> None:
     serializer.save(user_id=self.request.user)
@@ -54,7 +56,8 @@ class ChatroomDetailView(generics.RetrieveDestroyAPIView):
   """채팅방 상세 조회 및 삭제 (삭제 시 해당 채팅방의 모든 메시지도 삭제)"""
 
   serializer_class = ChatroomSerializer
-  permission_classes = [IsAuthenticated]
+  permission_classes = [IsAuthenticated] # 잠시 비활성
+  # permission_classes = [AllowAny] 
 
   def get_queryset(self):
     return Chatroom.objects.filter(user_id=self.request.user).prefetch_related("chats")
