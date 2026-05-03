@@ -1,5 +1,19 @@
 // contract_sidebar.js
 
+// ── chat-header 높이에 맞춰 사이드바 상단 여백 동적 조정 ──
+function syncSidebarTop() {
+  const header = document.querySelector('.chat-header');
+  const sidebar = document.getElementById('contractSidebar');
+  if (header && sidebar) {
+    const height = header.getBoundingClientRect().height;
+    sidebar.style.marginTop = height + 'px';
+  }
+}
+
+// 페이지 로드 시 + 창 크기 변경 시 실행
+document.addEventListener('DOMContentLoaded', syncSidebarTop);
+window.addEventListener('resize', syncSidebarTop);
+
 // ── 초기화: 페이지 로드 시 계약서 정보 조회 ──
 document.addEventListener('DOMContentLoaded', () => {
   const chatroomId = getChatroomId();
@@ -21,10 +35,10 @@ async function loadContractInfo(chatroomId) {
     if (data.success) {
       renderSidebar(data);
     } else {
-      showEmpty();
+      hideSidebar();
     }
   } catch (err) {
-    showEmpty();
+    hideSidebar();
   }
 }
 
@@ -55,12 +69,17 @@ function renderSidebar(data) {
 }
 
 // ── 상태 전환 ──
-function showEmpty() {
-  document.getElementById('sidebarEmpty').style.display = '';
-  document.getElementById('sidebarContent').style.display = 'none';
+// function showEmpty() {
+//   document.getElementById('sidebarEmpty').style.display = '';
+//   document.getElementById('sidebarContent').style.display = 'none';
+// }
+
+function hideSidebar() {
+  document.getElementById('contractSidebar').classList.add('collapsed');
 }
 
 function showContent() {
+  document.getElementById('contractSidebar').classList.remove('collapsed');
   document.getElementById('sidebarEmpty').style.display = 'none';
   document.getElementById('sidebarContent').style.display = '';
 }
