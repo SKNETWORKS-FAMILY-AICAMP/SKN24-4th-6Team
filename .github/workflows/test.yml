@@ -1,0 +1,65 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: aigo_test
+          POSTGRES_USER: aigo
+          POSTGRES_PASSWORD: aigo_test_pw
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U aigo -d aigo_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings
+      DJANGO_DEBUG: "False"
+      DJANGO_SECRET_KEY: ci-only-not-a-real-secret
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+      DB_NAME: aigo_test
+      DB_USER: aigo
+      DB_PASSWORD: aigo_test_pw
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      AIGO_AI_BASE_URL: http://localhost:9999
+      AIGO_AI_INTERNAL_API_KEY: ci-stub
+      AIGO_AI_REQUEST_TIMEOUT: "5"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Python 설치 (pyproject.toml 기준)
+        run: uv python install
+
+      - name: 의존성 설치
+        run: uv sync --frozen
+
+      - name: ruff lint
+        run: uv run ruff check .
+
+      - name: Django check
+        run: uv run python manage.py check --deploy --fail-level ERROR
+
+      - name: 마이그레이션 적용 (충돌/누락 검증 포함)
+        run: uv run python manage.py migrate --noinput
+
+      - name: pytest
+        run: uv run pytest
