@@ -108,7 +108,7 @@ def test_email_verify_expired(client):
 
 @pytest.mark.django_db
 def test_signup_success(client, signup_verification):
-    res = client.post(f"{BASE}/signup/", {
+    res = client.post(f"{BASE}/", {
         "email": "new@example.com",
         "password": "Test1234!",
         "password_confirm": "Test1234!",
@@ -120,7 +120,7 @@ def test_signup_success(client, signup_verification):
 
 @pytest.mark.django_db
 def test_signup_without_verification(client):
-    res = client.post(f"{BASE}/signup/", {
+    res = client.post(f"{BASE}/", {
         "email": "unverified@example.com",
         "password": "Test1234!",
         "password_confirm": "Test1234!",
@@ -131,7 +131,7 @@ def test_signup_without_verification(client):
 
 @pytest.mark.django_db
 def test_signup_password_mismatch(client, signup_verification):
-    res = client.post(f"{BASE}/signup/", {
+    res = client.post(f"{BASE}/", {
         "email": "new@example.com",
         "password": "Test1234!",
         "password_confirm": "Different1!",
@@ -194,7 +194,7 @@ def test_password_reset_success(client, user):
 @pytest.mark.django_db
 def test_me_requires_self_verify(client, user):
     client.force_login(user)
-    res = client.get(f"{BASE}/me/")
+    res = client.get("/api/mypage/me/")
     assert res.status_code == 403
 
 
@@ -204,6 +204,6 @@ def test_me_get_after_self_verify(client, user):
     session = client.session
     session["self_verified"] = True
     session.save()
-    res = client.get(f"{BASE}/me/")
+    res = client.get("/api/mypage/me/")
     assert res.status_code == 200
     assert res.data["email"] == user.email
