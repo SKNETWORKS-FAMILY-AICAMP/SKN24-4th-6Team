@@ -1,0 +1,55 @@
+<div class="modal-overlay" id="signupModal">
+  <div class="modal-card">
+    {% comment %} <h2 class="modal-logo" style="font-size:20px; margin-bottom:20px;">회원가입</h2> {% endcomment %}
+    <h2 class="modal-title-left">회원가입</h2>
+
+    <!-- 이메일 -->
+    <div class="field">
+      <label for="signupEmail">이메일</label>
+      <div class="field-row">
+        <input type="email" id="signupEmail" placeholder="예) abc@email.com">
+        <button type="button" class="btn-sm-primary" id="signupSendBtn" onclick="signupSendCode()">메일 발송</button>
+      </div>
+      <p id="signupEmailErr" class="error"></p>
+    </div>
+
+    <!-- 인증코드 -->
+    <div class="field">
+      <label for="signupCode">인증코드</label>
+      <div class="field-row">
+        <div class="code-input-wrap">
+          <input type="text" id="signupCode" placeholder="코드 입력" maxlength="6" disabled>
+          <span id="signupTimer" class="timer timer-inline"></span>
+        </div>
+        <button type="button" class="btn-sm-primary" id="signupVerifyBtn" onclick="signupVerifyCode()" disabled>코드 인증</button>
+      </div>
+      <p id="signupCodeErr" class="error"></p>
+    </div>
+
+    <!-- 비밀번호 -->
+    <div class="field">
+      <label for="signupPw">비밀번호</label>
+      <input type="password" id="signupPw" placeholder="영문, 숫자, 특수문자 중 2종 이상 포함 8~16자" disabled>
+      <p id="signupPwErr" class="error"></p>
+    </div>
+
+    <!-- 비밀번호 확인 -->
+    <div class="field">
+      <label for="signupPw2">비밀번호 확인</label>
+      <input type="password" id="signupPw2" placeholder="영문, 숫자, 특수문자 중 2종 이상 포함 8~16자" disabled>
+      <p id="signupPw2Err" class="error"></p>
+    </div>
+
+    <!-- 닉네임 -->
+    <div class="field">
+      <label for="signupNickname">닉네임</label>
+      <input type="text" id="signupNickname" placeholder="한글, 영문, 숫자 포함 2~6자" disabled>
+      <p id="signupNickErr" class="error"></p>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button type="button" class="btn-primary" id="signupBtn" onclick="signup()" disabled style="flex:1; margin-top:0;">회원가입</button>
+      <button type="button" class="btn-outline" onclick="closeModal('signupModal')" style="flex:1; margin-top:0;">취소</button>
+    </div>
+  </div>
+</div>

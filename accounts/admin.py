@@ -1,6 +1,12 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 
-from accounts.models import User
+from core.models import User
 
-admin.site.register(User, UserAdmin)
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['email', 'nickname', 'is_verified', 'is_admin', 'created_at']
+    list_filter = ['is_verified', 'is_admin']
+    search_fields = ['email', 'nickname']
+    ordering = ['-created_at']
+    readonly_fields = ['user_id', 'created_at']

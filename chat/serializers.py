@@ -1,23 +1,26 @@
 from rest_framework import serializers
 
-from chat.models import Message, Thread
+from chat.models import Chat, Chatroom
 
 
-class MessageSerializer(serializers.ModelSerializer):
+class ChatSerializer(serializers.ModelSerializer):
   class Meta:
-    model = Message
-    fields = ("id", "thread", "role", "content", "created_at")
-    read_only_fields = ("id", "thread", "role", "created_at")
+    model = Chat
+    fields = ("chat_id", "chatroom_id", "role", "content", "created_at")
+    read_only_fields = ("chat_id", "chatroom_id", "role", "created_at")
 
 
-class ThreadSerializer(serializers.ModelSerializer):
-  messages = MessageSerializer(many=True, read_only=True)
+class ChatroomSerializer(serializers.ModelSerializer):
+  chats = ChatSerializer(many=True, read_only=True)   # 채팅방 조회 시 메시지 목록도 중첩해서 함께 반환
+  title = serializers.CharField(required=False, allow_blank=True, allow_null=True, default="")  # [수정] 빈 문자열/null 허용 — 새채팅 생성 시 title="" 전송 대응
 
   class Meta:
-    model = Thread
-    fields = ("id", "title", "created_at", "updated_at", "messages")
-    read_only_fields = ("id", "created_at", "updated_at", "messages")
+    model = Chatroom
+    fields = ("chatroom_id", "title", "created_at", "last_chat_at", "chats")
+    read_only_fields = ("chatroom_id", "title", "created_at", "last_chat_at", "chats")
 
 
-class SendMessageSerializer(serializers.Serializer):
+class SendMessageSerializer(
+  serializers.Serializer
+):  # 메시지 전송 시 요청 body의 content 값만 받아서 검증
   content = serializers.CharField()

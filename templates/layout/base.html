@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>아이고청년</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+{% include "layout/navbar.html" %}
+{% block content %}{% endblock %}
+<script>
+  function getCsrf() {
+    return document.cookie.match(/csrftoken=([^;]+)/)?.[1] ?? '';
+  }
+  async function api(method, url, data) {
+    return fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+      credentials: 'same-origin',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

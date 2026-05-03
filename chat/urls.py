@@ -5,11 +5,6 @@ from chat import views
 app_name = "chat"
 
 urlpatterns = [
-  path("threads", views.ThreadListCreateView.as_view(), name="thread-list"),
-  path("threads/<int:pk>", views.ThreadDetailView.as_view(), name="thread-detail"),
-  path(
-    "threads/<int:pk>/messages",
-    views.SendMessageView.as_view(),
-    name="thread-send-message",
-  ),
+  path("", views.ChatPageView.as_view(), name="chat-page"),
+  path("<uuid:chatroom_id>/", views.ChatPageView.as_view(), name="chat-page-detail"),
 ]

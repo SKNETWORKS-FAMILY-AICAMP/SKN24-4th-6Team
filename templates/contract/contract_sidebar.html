@@ -1,0 +1,133 @@
+{% load static %}
+
+<!-- 계약서 우측 사이드바 -->
+<div class="contract-sidebar collapsed" id="contractSidebar">
+
+  <!-- 계약서 없을 때 -->
+  <div class="sidebar-empty" id="sidebarEmpty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+    </svg>
+    <p>업로드된 계약서가 없습니다</p>
+  </div>
+
+  <!-- 계약서 있을 때 -->
+  <div class="sidebar-content" id="sidebarContent" style="display:none">
+
+    <!-- 계약서 정보 -->
+    <section class="sidebar-section">
+      <div class="section-header">
+        <span class="section-title">계약서 정보</span>
+      </div>
+      <div class="contract-file-row">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <path d="M14 2v6h6"/>
+          </svg>
+        </div>
+        <span class="contract-file-name" id="contractFileName">-</span>
+      </div>
+    </section>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- 매물 정보 -->
+    <section class="sidebar-section">
+      <div class="section-header">
+        <span class="section-title">매물 정보</span>
+        <button class="btn-edit" id="propertyEditBtn" onclick="togglePropertyEdit()">수정</button>
+      </div>
+
+      <!-- 조회 모드 -->
+      <div class="info-list" id="propertyView">
+        <div class="info-row">
+          <span class="info-label">소재지</span>
+          <span class="info-value" id="viewLocation">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">임대차 기간</span>
+          <span class="info-value" id="viewPeriod">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">보증금</span>
+          <span class="info-value" id="viewDeposit">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">월세</span>
+          <span class="info-value" id="viewMonthRent">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">관리비</span>
+          <span class="info-value" id="viewHouseCost">-</span>
+        </div>
+      </div>
+
+      <!-- 수정 모드 -->
+      <form class="edit-form hidden" id="propertyEditForm" onsubmit="savePropertyInfo(event)">
+        <div class="form-row">
+          <label class="form-label">소재지</label>
+          <input class="form-input" type="text" id="editLocation" placeholder="소재지 입력">
+        </div>
+        <div class="form-row">
+          <label class="form-label">임대차 시작일</label>
+          <input class="form-input" type="date" id="editStartDate">
+        </div>
+        <div class="form-row">
+          <label class="form-label">임대차 종료일</label>
+          <input class="form-input" type="date" id="editEndDate">
+        </div>
+        <div class="form-row">
+          <label class="form-label">보증금 (만원)</label>
+          <input class="form-input" type="number" id="editDeposit" placeholder="0">
+        </div>
+        <div class="form-row">
+          <label class="form-label">월세 (만원)</label>
+          <input class="form-input" type="number" id="editMonthRent" placeholder="0">
+        </div>
+        <div class="form-row">
+          <label class="form-label">관리비</label>
+          <input class="form-input" type="text" id="editHouseCost" placeholder="관리비 입력">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-form-cancel" onclick="cancelPropertyEdit()">취소</button>
+          <button type="submit" class="btn-form-save">저장</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- 특약 정보 -->
+    <section class="sidebar-section">
+      <div class="section-header">
+        <span class="section-title">특약 정보</span>
+        <button class="btn-edit" id="specialEditBtn" onclick="toggleSpecialEdit()">수정</button>
+      </div>
+
+      <!-- 조회 모드 -->
+      <div id="specialView">
+        <p class="special-text" id="viewSpecialTerms">-</p>
+      </div>
+
+      <!-- 수정 모드 -->
+      <form class="edit-form hidden" id="specialEditForm" onsubmit="saveSpecialTerms(event)">
+        <textarea
+          class="form-textarea"
+          id="editSpecialTerms"
+          placeholder="특약 내용을 입력하세요"
+          rows="6"
+        ></textarea>
+        <div class="form-actions">
+          <button type="button" class="btn-form-cancel" onclick="cancelSpecialEdit()">취소</button>
+          <button type="submit" class="btn-form-save">저장</button>
+        </div>
+      </form>
+    </section>
+
+  </div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/contract/contract_sidebar.css' %}">
+<script src="{% static 'js/contract/contract_sidebar.js' %}"></script>

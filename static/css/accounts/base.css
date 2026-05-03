@@ -1,0 +1,141 @@
+@import "../tokens.css";
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  font-size: 15px;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Form ── */
+.field { margin-bottom: 14px; }
+.field label { 
+  display: block; 
+  font-size: 13px; 
+  font-weight: 600; 
+  color: var(--color-fg-soft); 
+  margin-bottom: 6px; 
+}
+
+.field-row { display: flex; gap: 8px; align-items: center; }
+.field-row input { flex: 1; }
+
+/* 인증코드 입력창 — 타이머를 입력창 오른쪽에 겹쳐 표시 */
+.code-input-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.code-input-wrap input {
+  width: 100%;
+  padding-right: 48px;
+}
+
+.timer-inline {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: auto;
+  pointer-events: none;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  background: var(--color-bg-elevated);
+  color: var(--color-fg);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s;
+  box-shadow: 0px 1px 3px rgba(15, 30, 55, 0.05), 0px 6px 16px rgba(15, 30, 55, 0.06);
+}
+
+input:focus { border-color: var(--color-border-focus); }
+input::placeholder { color: var(--color-fg-muted); }
+input:disabled { background: var(--color-bg); opacity: 0.6; }
+
+/* ── Buttons ── */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-fg-on-brand);
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.btn-primary:hover { background: var(--color-primary-hover); }
+
+.btn-sm {
+  background: var(--color-secondary);
+  color: var(--color-fg);
+  flex-shrink: 0;
+}
+
+.btn-sm-primary {
+  background: var(--color-primary);
+  color: var(--color-fg-on-brand);
+  flex-shrink: 0;
+}
+
+.btn-sm-primary:hover { background: var(--color-primary-hover); }
+
+.btn-sm:hover { background: var(--color-secondary-100); }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-fg);
+  width: 100%;
+  height: 48px;
+  margin-top: 8px;
+}
+
+.btn-outline:hover { background: var(--color-bg); }
+
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── 타이머 ── */
+.timer {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-red);
+  width: 36px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+/* ── 에러 / 힌트 ── */
+.error { color: var(--color-red); font-size: 12px; margin-top: 5px; min-height: 16px; }
+.hint  { text-align: center; font-size: 13px; color: var(--color-fg-muted); margin-top: 18px; }
+.hint a { color: var(--color-accent); }

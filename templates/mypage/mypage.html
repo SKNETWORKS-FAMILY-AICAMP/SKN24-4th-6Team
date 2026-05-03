@@ -1,0 +1,117 @@
+{% load static %}
+{% extends "layout/base_chat.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/modal.css' %}">
+<link rel="stylesheet" href="{% static 'css/accounts/modal.css' %}">
+<link rel="stylesheet" href="{% static 'css/mypage/mypage.css' %}">
+
+<!-- ============================================ -->
+<!-- 마이페이지 (채팅화면 위 모달)                   -->
+<!-- ============================================ -->
+<div class="modal-overlay active" id="mypageModal">
+  <div class="modal-card mypage-card">
+
+    <!-- 헤더: 뒤로가기 + 타이틀 -->
+    <header class="mypage-header">
+      <button type="button" class="back-btn" id="mypageBackBtn" aria-label="뒤로가기">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <h2 class="mypage-title">내 정보</h2>
+    </header>
+
+    <!-- 프로필 카드 -->
+    <section class="profile-card">
+      <div class="profile-avatar">
+        <span aria-hidden="true">👤</span>
+      </div>
+      <div class="profile-info">
+        <p class="profile-nickname" id="userNickname">홍이</p>
+        <p class="profile-email" id="userEmail">test@example.com</p>
+      </div>
+    </section>
+
+    <!-- 정보 수정 영역 -->
+    <section class="edit-section">
+      <h3 class="edit-section-title">정보 수정</h3>
+
+      <form id="mypageEditForm">
+        <!-- 닉네임 변경 -->
+        <div class="field">
+          <label for="newNickname">닉네임 변경</label>
+          <input
+            type="text"
+            id="newNickname"
+            placeholder="홍이"
+            maxlength="6"
+            autocomplete="off">
+          <p id="newNicknameErr" class="error"></p>
+        </div>
+
+        <!-- 새 비밀번호 -->
+        <div class="field">
+          <label for="newPassword">새 비밀번호</label>
+          <input
+            type="password"
+            id="newPassword"
+            placeholder="새 비밀번호 입력 (영문, 숫자, 특수문자 중 2종 이상 8~16자)"
+            autocomplete="new-password">
+          <p id="newPasswordErr" class="error"></p>
+        </div>
+
+        <!-- 새 비밀번호 확인 -->
+        <div class="field">
+          <label for="confirmPassword">새 비밀번호 확인</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="새 비밀번호 확인"
+            autocomplete="new-password">
+          <p id="confirmPasswordErr" class="error"></p>
+        </div>
+
+        <!-- 수정하기 버튼 (변경사항 없으면 비활성) -->
+        <button type="submit" class="btn-primary" id="submitEditBtn" disabled>
+          수정하기
+        </button>
+      </form>
+
+      <!-- 탈퇴하기 텍스트 링크 -->
+      <button type="button" class="withdraw-link" onclick="openModal('withdrawConfirmModal')">
+        탈퇴하기
+      </button>
+    </section>
+
+  </div>
+</div>
+
+
+<!-- ============================================ -->
+<!-- 탈퇴 확인 팝업                            -->
+<!-- ============================================ -->
+<div class="modal-overlay" id="withdrawConfirmModal">
+  <div class="modal-card confirm-card">
+    <div class="confirm-icon" aria-hidden="true">⚠</div>
+    <h2 class="confirm-title">정말 탈퇴하시겠습니까?</h2>
+    <p class="confirm-description">
+      탈퇴 시 회원 정보 및 채팅 기록이<br>
+      즉시 삭제되며 복구할 수 없습니다.
+    </p>
+
+    <div class="confirm-actions">
+      <button type="button" class="btn-danger" id="confirmWithdrawBtn">
+        탈퇴하기
+      </button>
+      <button type="button" class="btn-outline" onclick="closeModal('withdrawConfirmModal')">
+        취소
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/modal.js' %}"></script>
+<script src="{% static 'js/mypage/mypage.js' %}"></script>
+{% endblock %}

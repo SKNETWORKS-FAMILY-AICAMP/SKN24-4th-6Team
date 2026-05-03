@@ -1,0 +1,46 @@
+[Unit]
+Description=aigo-server gunicorn (Django WSGI)
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/var/www/aigo-server
+
+# .env 주입
+EnvironmentFile=/var/www/aigo-server/.env
+
+# /run/gunicorn 을 systemd 가 부팅 시 deploy:deploy 로 자동 생성
+RuntimeDirectory=gunicorn
+RuntimeDirectoryMode=0755
+
+# uv 경로 보정
+Environment="PATH=/home/deploy/.local/bin:/usr/local/bin:/usr/bin:/bin"
+
+#   GUNICORN_WORKERS=3
+#   GUNICORN_TIMEOUT=130   # RunPod 콜드스타트 대응 (AIGO_AI_REQUEST_TIMEOUT=120 보다 크게)
+Environment="GUNICORN_WORKERS=3"
+Environment="GUNICORN_TIMEOUT=130"
+
+ExecStart=/home/deploy/.local/bin/uv run \
+  gunicorn config.wsgi:application \
+  --bind unix:/run/gunicorn/aigo.sock \
+  --workers ${GUNICORN_WORKERS} \
+  --timeout ${GUNICORN_TIMEOUT} \
+  --access-logfile - \
+  --error-logfile -
+
+# graceful reload — 코드 갱신 후 워커만 다시 띄우기
+ExecReload=/bin/kill -s HUP $MAINPID
+
+# 크래시 시 자동 복구
+Restart=always
+RestartSec=3
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=gunicorn
+
+[Install]
+WantedBy=multi-user.target

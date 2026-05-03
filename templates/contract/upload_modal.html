@@ -1,0 +1,88 @@
+{% load static %}
+
+<!-- 계약서 업로드 모달 -->
+<div class="modal-overlay" id="uploadModalOverlay">
+  <div class="modal" id="uploadModal">
+    <div class="modal-title">계약서 업로드</div>
+
+    <!-- 4-2: 기본 드롭존 -->
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept=".pdf">
+      <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>
+      </svg>
+      <div class="dropzone-text">파일을 끌다 놓거나 클릭하여 업로드</div>
+      <div class="dropzone-sub">PDF · 최대 5MB</div>
+      <div class="dropzone-notice">
+        업로드된 계약서는 분석 후 자동 삭제됩니다.<br>
+        채팅방 당 하나의 계약서만 업로드 가능합니다.
+      </div>
+    </div>
+
+    <!-- 4-3: 업로드 중 -->
+    <div class="upload-progress" id="uploadProgress">
+      <div class="file-row">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+          </svg>
+        </div>
+        <div class="file-name" id="uploadFileName">파일명.pdf</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">업로드 중...</div>
+    </div>
+
+    <!-- 4-4: 5MB 초과 -->
+    <div class="size-error" id="sizeError">
+      <div class="size-error-text">파일은 최대 5MB까지만 업로드 가능해요</div>
+      <button class="btn-reselect" id="reselectBtn">다시 선택</button>
+    </div>
+
+    <!-- 4-5: 분석 중 -->
+    <div class="analyzing" id="analyzing">
+      <div class="analyze-file-row">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <path d="M14 2v6h6"/>
+          </svg>
+        </div>
+        <div class="file-name" id="analyzeFileName">파일명.pdf</div>
+      </div>
+      <ul class="step-list">
+        <li class="step-item">
+          <span class="step-badge done">✓</span>
+          <span>계약서 업로드</span>
+          <span class="step-status done">완료</span>
+        </li>
+        <li class="step-item">
+          <span class="step-badge active">2</span>
+          <span>계약서 인식(OCR)</span>
+          <span class="step-status active">
+            <span class="spinner"></span>진행 중
+          </span>
+        </li>
+        <li class="step-item">
+          <span class="step-badge pending">3</span>
+          <span>계약서 추출</span>
+        </li>
+      </ul>
+      <div class="analyze-notice">
+        파일 해상도가 낮거나 일부 내용이 정확하지 않을 수 있습니다.<br>
+        추출된 내용을 직접 확인하고 수정해주세요.
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" id="cancelBtn">취소</button>
+      <button class="btn btn-save" id="saveBtn" disabled>저장</button>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="{% static 'css/contract/upload_modal.css' %}">
+<script src="{% static 'js/contract/upload_modal.js' %}"></script>
