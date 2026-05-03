@@ -1,8 +1,15 @@
 from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+
+class MypagePageView(LoginRequiredMixin, TemplateView):
+  """마이페이지 HTML 뷰"""
+  template_name = "mypage/mypage.html"
 
 from accounts.serializers import UserResponseSerializer
 from .serializers import SelfVerifySerializer, ProfileUpdateSerializer
