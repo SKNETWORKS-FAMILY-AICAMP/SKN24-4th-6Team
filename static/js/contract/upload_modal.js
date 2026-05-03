@@ -167,15 +167,15 @@ function resetToDropzone() {
   showState('dropzone');
 }
 
-// ── 모달 닫기 ──
-function closeModal() {
-  document.getElementById('uploadModalOverlay').classList.add('hidden');
-  resetToDropzone();
-}
-
 // ── 모달 열기 (외부에서 호출) ──
 function openUploadModal() {
-  document.getElementById('uploadModalOverlay').classList.remove('hidden');
+  document.getElementById('uploadModalOverlay').classList.add('modal-overlay--visible');
+}
+
+// ── 모달 닫기 ──
+function closeModal() {
+  document.getElementById('uploadModalOverlay').classList.remove('modal-overlay--visible');
+  resetToDropzone();
 }
 
 // ── 계약서 정보 갱신 (우측 바) ──
