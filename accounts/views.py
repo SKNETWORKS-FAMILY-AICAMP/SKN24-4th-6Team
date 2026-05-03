@@ -180,7 +180,7 @@ class SignupView(APIView):
 
         # 자동 로그인 없이 로그인 화면으로 리다이렉트
         return Response(
-            {'message': '회원가입이 완료되었습니다. 로그인 해주세요.'},
+            {'message': '회원가입이 완료되었습니다.'},
             status=status.HTTP_201_CREATED
         )
 
@@ -207,7 +207,7 @@ class LoginView(APIView):
 
         if not User.objects.filter(email=email).exists():
             return Response(
-                {'field': 'email', 'error': '등록되지 않은 이메일입니다.'},
+                {'field': 'email', 'error': '가입되지 않은 이메일입니다.'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
@@ -215,7 +215,7 @@ class LoginView(APIView):
 
         if user is None:
             return Response(
-                {'field': 'password', 'error': '비밀번호가 올바르지 않습니다.'},
+                {'field': 'password', 'error': '비밀번호가 일치하지 않습니다.'},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 

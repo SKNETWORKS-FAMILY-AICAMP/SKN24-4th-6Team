@@ -30,7 +30,9 @@ def validate_nickname_format(value):
     """
     닉네임: 한글, 영문, 숫자 포함 2~6자
     """
-    if not re.match(r'^[가-힣a-zA-Z0-9]{2,6}$', value):
+    if not (2 <= len(value) <= 6):
+        raise serializers.ValidationError('닉네임은 2~6자로 입력해주세요.')
+    if not re.match(r'^[가-힣a-zA-Z0-9]+$', value):
         raise serializers.ValidationError('닉네임 형식이 올바르지 않습니다.')
     return value
 
@@ -115,9 +117,22 @@ class SignupSerializer(serializers.Serializer):
     인증 완료된 이메일로만 가입 가능
     """
     email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
-    password_confirm = serializers.CharField(write_only=True)
-    nickname = serializers.CharField(max_length=6)
+    password = serializers.CharField(
+        write_only=True,
+        error_messages={'blank': '비밀번호를 입력해주세요.', 'required': '비밀번호를 입력해주세요.'},
+    )
+    password_confirm = serializers.CharField(
+        write_only=True,
+        error_messages={'blank': '비밀번호를 입력해주세요.', 'required': '비밀번호를 입력해주세요.'},
+    )
+    nickname = serializers.CharField(
+        max_length=6,
+        error_messages={
+            'blank': '닉네임을 입력해주세요.',
+            'required': '닉네임을 입력해주세요.',
+            'max_length': '닉네임은 2~6자로 입력해주세요.',
+        },
+    )
 
     def validate_email(self, value):
         # 이미 가입된 이메일 재확인
@@ -246,7 +261,6 @@ class ProfileUpdateSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     {'password_confirm': '새 비밀번호 확인을 입력해주세요.'}
                 )
-            # 설계서 SCR-USER-007 항목 4-1
             if attrs['password'] != attrs['password_confirm']:
                 raise serializers.ValidationError(
                     {'password_confirm': '비밀번호가 일치하지 않습니다.'}
