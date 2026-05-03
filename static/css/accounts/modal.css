@@ -30,9 +30,10 @@
   box-shadow: 0 8px 40px rgba(15, 30, 55, 0.18);
 }
 
-#termsModal .modal-card {
-  max-width: 1000px;
-  max-height: 986px;
+#termsModal .modal-card,
+#privacyModal .modal-card {
+  max-width: 860px;
+  max-height: 90vh;
 }
 
 /* 닫기 버튼 */
