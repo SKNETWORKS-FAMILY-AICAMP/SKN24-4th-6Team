@@ -18,41 +18,45 @@ async function mpFetch(url, options = {}) {
     ...options,
   });
   let data = null;
-  try { data = await res.json(); } catch {}
+  try { data = await res.json(); } catch { }
   return { ok: res.ok, status: res.status, data };
 }
 
 /* ══════════════════════════════
    DOM
 ══════════════════════════════ */
-const btnProfile        = document.getElementById("btnProfile");
+const btnProfile = document.getElementById("btnProfile");
 
-const modalSelfVerify   = document.getElementById("modalSelfVerify");
-const verifyPasswordEl  = document.getElementById("verifyPassword");
-const verifyErrEl       = document.getElementById("verifyErr");
-const btnVerifyConfirm  = document.getElementById("btnVerifyConfirm");
-const btnVerifyCancel   = document.getElementById("btnVerifyCancel");
+const modalSelfVerify = document.getElementById("modalSelfVerify");
+const verifyPasswordEl = document.getElementById("verifyPassword");
+const verifyErrEl = document.getElementById("verifyErr");
+const btnVerifyConfirm = document.getElementById("btnVerifyConfirm");
+const btnVerifyCancel = document.getElementById("btnVerifyCancel");
 
-const modalMypage       = document.getElementById("modalMypage");
-const mypageAvatarEl    = document.getElementById("mypageAvatar");
-const mypageNicknameEl  = document.getElementById("mypageNickname");
-const mypageEmailEl     = document.getElementById("mypageEmail");
-const mypageEditForm    = document.getElementById("mypageEditForm");
-const newNicknameEl     = document.getElementById("newNickname");
-const newPasswordEl     = document.getElementById("newPassword");
+const modalMypage = document.getElementById("modalMypage");
+const mypageAvatarEl = document.getElementById("mypageAvatar");
+const mypageNicknameEl = document.getElementById("mypageNickname");
+const mypageEmailEl = document.getElementById("mypageEmail");
+const mypageEditForm = document.getElementById("mypageEditForm");
+const newNicknameEl = document.getElementById("newNickname");
+const newPasswordEl = document.getElementById("newPassword");
 const confirmPasswordEl = document.getElementById("confirmPassword");
-const btnMypageSubmit   = document.getElementById("btnMypageSubmit");
-const btnOpenWithdraw   = document.getElementById("btnOpenWithdraw");
+const btnMypageSubmit = document.getElementById("btnMypageSubmit");
+const btnOpenWithdraw = document.getElementById("btnOpenWithdraw");
 
-const modalWithdraw        = document.getElementById("modalWithdraw");
-const btnWithdrawConfirm   = document.getElementById("btnWithdrawConfirm");
-const btnWithdrawCancel    = document.getElementById("btnWithdrawCancel");
+const modalWithdraw = document.getElementById("modalWithdraw");
+const btnWithdrawConfirm = document.getElementById("btnWithdrawConfirm");
+const btnWithdrawCancel = document.getElementById("btnWithdrawCancel");
 
 /* ══════════════════════════════
-   모달 헬퍼
+   모달 내용 초기화
 ══════════════════════════════ */
 function showModal(el) { el.classList.add("modal-overlay--visible"); }
-function hideModal(el) { el.classList.remove("modal-overlay--visible"); }
+function hideModal(el) {
+  el.classList.remove("modal-overlay--visible");
+  el.querySelectorAll("input:not([disabled])").forEach(i => i.value = "");
+  el.querySelectorAll(".mypage-error").forEach(e => e.textContent = "");
+}
 
 /* ══════════════════════════════
    유효성 검사
@@ -69,15 +73,15 @@ function validatePassword(v) {
   if (v.length < 8 || v.length > 16) return "비밀번호는 8~16자로 입력해주세요.";
   let cnt = 0;
   if (/[a-zA-Z]/.test(v)) cnt++;
-  if (/[0-9]/.test(v))    cnt++;
+  if (/[0-9]/.test(v)) cnt++;
   if (/[^a-zA-Z0-9]/.test(v)) cnt++;
   if (cnt < 2) return "영문, 숫자, 특수문자 중 2종 이상 포함해주세요.";
   return null;
 }
 
 function clearMypageErrors() {
-  document.getElementById("newNicknameErr").textContent  = "";
-  document.getElementById("newPasswordErr").textContent  = "";
+  document.getElementById("newNicknameErr").textContent = "";
+  document.getElementById("newPasswordErr").textContent = "";
   document.getElementById("confirmPasswordErr").textContent = "";
 }
 
@@ -85,7 +89,7 @@ function clearMypageErrors() {
    본인인증 모달
 ══════════════════════════════ */
 btnProfile.addEventListener("click", () => {
-  verifyPasswordEl.value  = "";
+  verifyPasswordEl.value = "";
   verifyErrEl.textContent = "";
   showModal(modalSelfVerify);
   setTimeout(() => verifyPasswordEl.focus(), 80);
@@ -132,22 +136,22 @@ async function loadMypageData() {
   if (!ok || !data) return;
 
   const { nickname, email } = data;
-  mypageAvatarEl.textContent   = (nickname || "?")[0].toUpperCase();
+  mypageAvatarEl.textContent = (nickname || "?")[0].toUpperCase();
   mypageNicknameEl.textContent = nickname || "";
-  mypageEmailEl.textContent    = email    || "";
+  mypageEmailEl.textContent = email || "";
 
   newNicknameEl.placeholder = nickname || "";
-  newNicknameEl.value       = "";
-  newPasswordEl.value       = "";
-  confirmPasswordEl.value   = "";
-  btnMypageSubmit.disabled  = true;
+  newNicknameEl.value = "";
+  newPasswordEl.value = "";
+  confirmPasswordEl.value = "";
+  btnMypageSubmit.disabled = true;
   clearMypageErrors();
 }
 
 /* ── 수정하기 버튼 활성/비활성 ── */
 function checkMypageChanged() {
-  const hasNick    = newNicknameEl.value.trim().length > 0;
-  const hasPw      = newPasswordEl.value.length > 0;
+  const hasNick = newNicknameEl.value.trim().length > 0;
+  const hasPw = newPasswordEl.value.length > 0;
   const hasConfirm = confirmPasswordEl.value.length > 0;
   btnMypageSubmit.disabled = !(hasNick || (hasPw && hasConfirm));
 }
@@ -161,9 +165,9 @@ mypageEditForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearMypageErrors();
 
-  const nickname   = newNicknameEl.value.trim();
-  const pw         = newPasswordEl.value;
-  const confirmPw  = confirmPasswordEl.value;
+  const nickname = newNicknameEl.value.trim();
+  const pw = newPasswordEl.value;
+  const confirmPw = confirmPasswordEl.value;
 
   const nicknameErr = validateNickname(nickname);
   if (nicknameErr) {
@@ -197,6 +201,7 @@ mypageEditForm.addEventListener("submit", async (e) => {
   if (ok) {
     const changed = data?.changed || [];
     if (changed.includes("password")) {
+      alert('비밀번호가 변경되었습니다.\n재로그인을 위해 로그인 화면으로 이동합니다.');
       window.location.href = "/login/";
     } else {
       window.location.reload();
@@ -205,8 +210,8 @@ mypageEditForm.addEventListener("submit", async (e) => {
   }
 
   const errs = data?.errors || {};
-  if (errs.nickname)         document.getElementById("newNicknameErr").textContent  = errs.nickname[0];
-  if (errs.password)         document.getElementById("newPasswordErr").textContent  = errs.password[0];
+  if (errs.nickname) document.getElementById("newNicknameErr").textContent = errs.nickname[0];
+  if (errs.password) document.getElementById("newPasswordErr").textContent = errs.password[0];
   if (errs.password_confirm) document.getElementById("confirmPasswordErr").textContent = errs.password_confirm[0];
   if (!errs.nickname && !errs.password && !errs.password_confirm) {
     alert("오류가 발생했습니다. 다시 시도해주세요.");

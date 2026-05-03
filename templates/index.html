@@ -1,40 +1,597 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>아이고청년</title>
-  <link rel="stylesheet" href="{% static 'css/accounts/base.css' %}">
-  <link rel="stylesheet" href="{% static 'css/accounts/modal.css' %}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>아이고 청년</title>
+    <meta
+      name="description"
+      content="전세사기 피해자의 75.1%가 20-30대 청년. 아이고 청년은 주임법·판례 기반으로 임대차 계약을 무료로 검토해 드립니다."
+    />
 
-  <!-- ════════════════════════════════════
-       홈 화면
-       ════════════════════════════════════ -->
-  <div class="home-wrap">
-    <div class="home-hero">
-      <img src="{% static 'img/main_img.svg' %}" alt="아이고 청년" class="home-logo">
-      <p class="home-tagline">청년을 위한 AI 법률·계약 도우미<br>궁금한 것을 편하게 물어보세요.</p>
-      <div class="home-actions">
-        <button class="btn-primary" onclick="openModal('loginModal')">로그인</button>
-        <button class="btn-outline" onclick="openModal('termsModal')">회원가입</button>
-      </div>
+    <link rel="stylesheet" href="{% static 'css/accounts/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/accounts/modal.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+  </head>
+  <body class="landing-page landing">
+    <!-- 스크롤 진행 바 -->
+    <div class="scroll-progress" aria-hidden="true">
+      <span class="scroll-progress__bar"></span>
     </div>
-    <p class="home-footer">
-      <a href="#" onclick="openModal('privacyModal'); return false;">개인정보처리방침</a>
-    </p>
-  </div>
 
+    <!-- ════════════════════════════════════
+       Sticky Top Navigation
+       ════════════════════════════════════ -->
+    <header class="site-nav">
+      <div class="container site-nav__inner">
+        <a href="#" class="site-nav__brand" aria-label="아이고 청년 홈">
+          <span class="site-nav__brand-mark">아</span>
+          <span>아이고 청년</span>
+        </a>
 
-  {% include "accounts/login_modal.html" %}
-  {% include "accounts/signup_privacy_modal.html" %}
-  {% include "accounts/signup_modal.html" %}
-  {% include "accounts/reset_password_modal.html" %}
-  {% include "accounts/privacy_modal.html" %}
+        <nav class="site-nav__menu" aria-label="주 메뉴">
+          <a href="#problem">문제</a>
+          <a href="#solution">서비스</a>
+          <a href="#how">사용법</a>
+          <a href="#diff">비교</a>
+          <a href="#faq">FAQ</a>
+        </nav>
 
-  <script src="{% static 'js/accounts/modal.js' %}"></script>
-  <script src="{% static 'js/accounts/auth.js' %}"></script>
-</body>
+        <div class="site-nav__cta">
+          <button
+            class="btn-ghost"
+            type="button"
+            onclick="openModal('loginModal')"
+          >
+            로그인
+          </button>
+          <button
+            class="btn-solid"
+            type="button"
+            onclick="openModal('termsModal')"
+          >
+            회원가입
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ════════════════════════════════════
+         01 · Hero
+         ════════════════════════════════════ -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__bg" aria-hidden="true"></div>
+        <div class="container hero__inner">
+          <span class="hero__badge">
+            <span class="dot" aria-hidden="true"></span>
+            AI 임대차 계약서 검토 · 베타 무료
+          </span>
+
+          <h1 class="hero__title" id="hero-title">
+            <span class="line"><span>전세사기 피해자 75%,</span></span>
+            <span class="line"
+              ><span class="accent">20–30대였습니다.</span></span
+            >
+          </h1>
+
+          <p class="hero__sub">
+            당신의 임대차 계약서, 사인하기 전에 AI가 먼저 확인합니다.
+            <small>회원가입 후 무료로 이용할 수 있습니다.</small>
+          </p>
+
+          <div class="hero__cta">
+            <button
+              class="btn-primary-lg"
+              type="button"
+              onclick="openModal('termsModal')"
+            >
+              무료로 시작하기
+              <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <button
+              class="btn-secondary-lg"
+              type="button"
+              onclick="openModal('loginModal')"
+            >
+              이미 회원이신가요?
+            </button>
+          </div>
+
+          <div class="hero__notice" role="note">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            본 서비스는 법률 자문이 아닌 정보 안내 서비스입니다.
+          </div>
+        </div>
+
+        <div class="hero__scroll" aria-hidden="true">
+          <span>SCROLL</span>
+          <span class="hero__scroll-line"></span>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════
+         02 · Problem
+         ════════════════════════════════════ -->
+      <section
+        class="section section--alt"
+        id="problem"
+        aria-labelledby="problem-title"
+      >
+        <div class="container">
+          <div class="problem__head reveal">
+            <span class="eyebrow">Problem</span>
+            <h2 class="section-title" id="problem-title">
+              이런 고민, 있으신가요?
+            </h2>
+          </div>
+
+          <div class="stat reveal">
+            <div class="stat__num">
+              <span data-count="75.1" data-decimals="1" data-duration="1800"
+                >0.0</span
+              ><span class="pct">%</span>
+            </div>
+            <div class="stat__label">전세사기 피해자 중 20–30대 비율</div>
+            <div class="stat__source">
+              출처 · 국토교통부 전세사기 피해 실태조사 (2025.05)
+            </div>
+          </div>
+
+          <div class="pain-grid reveal-stagger">
+            <article class="pain-card">
+              <p class="pain-card__quote">이 특약, 사인해도 되나?</p>
+              <p class="pain-card__body">
+                법률 용어를 몰라서 불리한 조항을 놓치기 쉬워요.
+              </p>
+            </article>
+            <article class="pain-card">
+              <p class="pain-card__quote">보증금 돌려받을 수 있을까?</p>
+              <p class="pain-card__body">
+                전세사기 피해의 75%가 청년층에 집중되어 있습니다.
+              </p>
+            </article>
+            <article class="pain-card">
+              <p class="pain-card__quote">변호사 상담은 부담스러워…</p>
+              <p class="pain-card__body">
+                계약서 1회 검토에 수십만 원의 비용이 필요해요.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════
+         03 · Solution
+         ════════════════════════════════════ -->
+      <section class="section" id="solution" aria-labelledby="solution-title">
+        <div class="container">
+          <div class="solution__head reveal">
+            <span class="eyebrow">Solution</span>
+            <h2 class="section-title" id="solution-title">
+              아이고 청년이 도와드립니다
+            </h2>
+            <p class="section-subtitle">
+              법령·판례에 근거한 답변을, 일상 언어로. 회원가입 한 번이면 세 가지
+              핵심 기능을 모두 무료로 사용할 수 있습니다.
+            </p>
+          </div>
+
+          <div class="feature-grid reveal-stagger">
+            <article class="feature">
+              <div class="feature__icon" aria-hidden="true">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  ></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="9" y1="13" x2="15" y2="13"></line>
+                  <line x1="9" y1="17" x2="13" y2="17"></line>
+                </svg>
+              </div>
+              <h3 class="feature__title">계약서 PDF 업로드</h3>
+              <p class="feature__body">
+                OCR로 자동 인식 후, 개인정보는 마스킹 처리합니다. 업로드만 하면
+                즉시 검토가 시작됩니다.
+              </p>
+              <span class="feature__badge">회원 전용</span>
+            </article>
+
+            <article class="feature">
+              <div class="feature__icon" aria-hidden="true">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 3v18"></path>
+                  <path d="M5 8h14"></path>
+                  <path d="M8 8l-3 8a3 3 0 0 0 6 0z"></path>
+                  <path d="M16 8l-3 8a3 3 0 0 0 6 0z"></path>
+                </svg>
+              </div>
+              <h3 class="feature__title">법령·판례 기반 답변</h3>
+              <p class="feature__body">
+                주택임대차보호법, 판례, 해석례를 RAG로 검색하여 근거와 함께
+                답변을 제공합니다.
+              </p>
+              <span class="feature__badge">회원 전용</span>
+            </article>
+
+            <article class="feature">
+              <div class="feature__icon" aria-hidden="true">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                  ></path>
+                  <line x1="8" y1="10" x2="8.01" y2="10"></line>
+                  <line x1="12" y1="10" x2="12.01" y2="10"></line>
+                  <line x1="16" y1="10" x2="16.01" y2="10"></line>
+                </svg>
+              </div>
+              <h3 class="feature__title">일상 언어로 질문</h3>
+              <p class="feature__body">
+                법률 용어를 몰라도 괜찮습니다. 자연어 Q&amp;A 챗봇이 친절하게
+                풀어 답합니다.
+              </p>
+              <span class="feature__badge">회원 전용</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════
+         04 · How It Works
+         ════════════════════════════════════ -->
+      <section
+        class="section section--alt"
+        id="how"
+        aria-labelledby="how-title"
+      >
+        <div class="container">
+          <div class="how__head reveal">
+            <span class="eyebrow">How it works</span>
+            <h2 class="section-title" id="how-title">이렇게 사용하세요</h2>
+            <p class="section-subtitle">
+              랜딩 페이지에서 모달로 진행되며, 별도 페이지 이동이 없습니다.
+            </p>
+          </div>
+
+          <div class="steps reveal-stagger">
+            <div class="step">
+              <div class="step__num">1</div>
+              <div>
+                <h3 class="step__title">회원가입</h3>
+                <p class="step__body">
+                  랜딩 위에서 모달로 진행 — 이용약관 동의 → 가입 → 이메일 인증.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step__num">2</div>
+              <div>
+                <h3 class="step__title">로그인</h3>
+                <p class="step__body">
+                  랜딩 위에서 모달 진행 — 페이지 이동 없이 바로 시작합니다.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step__num">3</div>
+              <div>
+                <h3 class="step__title">질문 또는 PDF 업로드</h3>
+                <p class="step__body">
+                  채팅 화면에서 자연어로 질문하거나, 계약서 PDF를 업로드합니다.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step__num">4</div>
+              <div>
+                <h3 class="step__title">답변 확인 및 이력 저장</h3>
+                <p class="step__body">
+                  법령 근거와 함께 답변을 받아보고, 마이페이지에 자동으로
+                  저장됩니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════
+         05 · Differentiator
+         ════════════════════════════════════ -->
+      <section class="section" id="diff" aria-labelledby="diff-title">
+        <div class="container">
+          <div class="diff__head reveal">
+            <span class="eyebrow">Differentiator</span>
+            <h2 class="section-title" id="diff-title">
+              기존 서비스와 무엇이 다른가요?
+            </h2>
+            <p class="section-subtitle">
+              주소 위험 분석이나 B2B 법무 도구는 있어도, 청년 임차인의 ‘계약
+              내용’을 법령 근거로 Q&amp;A하는 서비스는 비어 있었습니다.
+            </p>
+          </div>
+
+          <div class="diff-table-wrap reveal">
+            <table class="diff-table">
+              <thead>
+                <tr>
+                  <th scope="col">구분</th>
+                  <th scope="col">서울시<br />전세사기 위험분석</th>
+                  <th scope="col">C-node</th>
+                  <th scope="col">앨리비 (Allibee)</th>
+                  <th scope="col" class="is-ours">아이고 청년</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>분석 대상</td>
+                  <td>주소<br />(서울 소재 주택 한정)</td>
+                  <td>범용 계약</td>
+                  <td>범용 계약</td>
+                  <td class="is-ours">계약서</td>
+                </tr>
+                <tr>
+                  <td>법령 근거</td>
+                  <td>법률·공공데이터</td>
+                  <td>민법·상법, 공정위 가이드라인</td>
+                  <td>판례·법령 참조</td>
+                  <td class="is-ours">주임법·판례·해석례</td>
+                </tr>
+                <tr>
+                  <td>대상</td>
+                  <td>서울시 내 임대차 계약 예정<br />만 39세 이하 청년</td>
+                  <td>기업·법무팀 (B2B)</td>
+                  <td>기업·법무팀 (B2B)</td>
+                  <td class="is-ours">전국 일반 임차인 (B2C)</td>
+                </tr>
+                <tr>
+                  <td>비용</td>
+                  <td>인당 최대 2회 무료<br />(청년 대상)</td>
+                  <td>유료 구독</td>
+                  <td>유료 구독</td>
+                  <td class="is-ours">무료</td>
+                </tr>
+                <tr>
+                  <td>특약 Q&amp;A</td>
+                  <td><span class="x" aria-label="미지원">×</span></td>
+                  <td><span class="x" aria-label="미지원">×</span></td>
+                  <td><span class="x" aria-label="미지원">×</span></td>
+                  <td class="is-ours">
+                    <span class="check" aria-label="지원">✓</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="diff__conclusion reveal">
+            → 임대차 계약 ‘내용’을 법령 근거로 Q&amp;A하는
+            <strong>일반인 대상 서비스의 공백</strong>을 채웁니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════
+         06 · Trust + FAQ
+         ════════════════════════════════════ -->
+      <section
+        class="section section--alt"
+        id="faq"
+        aria-labelledby="faq-title"
+      >
+        <div class="container">
+          <!-- CTA 박스 -->
+          <div class="trust-cta reveal">
+            <div class="trust-cta__inner">
+              <div>
+                <h2 class="trust-cta__title">
+                  회원가입하고 무료로 이용해보세요
+                </h2>
+                <p class="trust-cta__sub">
+                  이메일 인증 + 개인정보 처리방침 동의만 하시면 됩니다.
+                </p>
+              </div>
+              <div class="trust-cta__actions">
+                <button
+                  class="btn-warn"
+                  type="button"
+                  onclick="openModal('termsModal')"
+                >
+                  지금 시작
+                  <span class="arrow" aria-hidden="true">→</span>
+                </button>
+                <button
+                  class="trust-cta__link"
+                  type="button"
+                  onclick="openModal('privacyModal')"
+                >
+                  개인정보 처리방침 보기 →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ -->
+          <div class="faq">
+            <div class="faq__head reveal">
+              <span class="eyebrow">FAQ</span>
+              <h2 class="section-title" id="faq-title">자주 묻는 질문</h2>
+            </div>
+
+            <div class="faq__list reveal-stagger">
+              <details class="faq-item">
+                <summary>
+                  <span>Q. 정말 무료인가요?</span>
+                  <span class="chev" aria-hidden="true">+</span>
+                </summary>
+                <div class="faq-item__body">
+                  네. 베타 기간 동안 회원가입한 모든 사용자가 무료로 이용할 수
+                  있습니다. 향후 정책 변경 시 사전에 안내드립니다.
+                </div>
+              </details>
+              <details class="faq-item">
+                <summary>
+                  <span>Q. 개인정보는 안전한가요?</span>
+                  <span class="chev" aria-hidden="true">+</span>
+                </summary>
+                <div class="faq-item__body">
+                  업로드된 계약서의 개인정보(이름·주민번호·주소 등)는 OCR
+                  단계에서 자동 마스킹 처리되며, 저장 시 암호화됩니다. 자세한
+                  내용은 개인정보 처리방침을 참고해 주세요.
+                </div>
+              </details>
+              <details class="faq-item">
+                <summary>
+                  <span>Q. AI가 제공하는 답변을 법적으로 신뢰해도 되나요?</span>
+                  <span class="chev" aria-hidden="true">+</span>
+                </summary>
+                <div class="faq-item__body">
+                  본 서비스는 법률 자문이 아닌 정보 안내 서비스입니다. 법령·판례
+                  근거를 함께 제공하지만, 구체적인 법적 판단이 필요한 경우
+                  전문가 상담을 권장합니다.
+                </div>
+              </details>
+              <details class="faq-item">
+                <summary>
+                  <span>Q. 어떤 데이터를 기반으로 답변하나요?</span>
+                  <span class="chev" aria-hidden="true">+</span>
+                </summary>
+                <div class="faq-item__body">
+                  주택임대차보호법, 대법원 판례, 법제처 해석례를 인덱싱한 RAG
+                  기반 검색을 사용합니다. 답변에는 출처 조항과 판례 번호가 함께
+                  표기됩니다.
+                </div>
+              </details>
+              <details class="faq-item">
+                <summary>
+                  <span>Q. 계약서 PDF는 저장되나요?</span>
+                  <span class="chev" aria-hidden="true">+</span>
+                </summary>
+                <div class="faq-item__body">
+                  마이페이지에 사용자 본인 확인 후에만 접근할 수 있는 형태로
+                  저장됩니다. 언제든 직접 삭제할 수 있으며, 탈퇴 시 모두 즉시
+                  파기됩니다.
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ════════════════════════════════════
+       07 · Footer
+       ════════════════════════════════════ -->
+    <footer class="site-footer" aria-labelledby="footer-title">
+      <div class="container">
+        <div class="site-footer__grid">
+          <div class="site-footer__brand">
+            <h3 id="footer-title">아이고 청년</h3>
+            <p>
+              AI 임대차 계약서 검토 서비스 — 청년이 부담 없이 묻고, 근거와 함께
+              답을 받는 곳.
+            </p>
+          </div>
+          <div class="site-footer__col">
+            <h4>서비스</h4>
+            <ul>
+              <li>
+                <button type="button" onclick="openModal('termsModal')">
+                  회원가입
+                </button>
+              </li>
+              <li>
+                <button type="button" onclick="openModal('loginModal')">
+                  로그인
+                </button>
+              </li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__col">
+            <h4>법적 고지</h4>
+            <ul>
+              <li>
+                <button type="button" onclick="openModal('privacyModal')">
+                  개인정보처리방침
+                </button>
+              </li>
+              <li>
+                <button type="button" onclick="openModal('termsModal')">
+                  이용약관
+                </button>
+              </li>
+              <li>
+                <a href="#hero-title" aria-label="면책 고지로 이동"
+                  >면책 고지</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="site-footer__bottom">
+          <p class="site-footer__notice">
+            <span aria-hidden="true">⚠</span>
+            본 서비스는 법률 자문이 아닌 정보 안내 서비스이며, 구체적 법적
+            판단은 전문가 상담이 필요합니다.
+          </p>
+          <p>© 2026 아이고 청년 (SKN24-6팀) · GitHub: aigo-youth</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 모달 (기존 자산 재사용) -->
+    {% include "accounts/login_modal.html" %} {% include
+    "accounts/signup_privacy_modal.html" %} {% include
+    "accounts/signup_modal.html" %} {% include
+    "accounts/reset_password_modal.html" %} {% include
+    "accounts/privacy_modal.html" %}
+
+    <script src="{% static 'js/accounts/modal.js' %}"></script>
+    <script src="{% static 'js/accounts/auth.js' %}"></script>
+    <script src="{% static 'js/landing.js' %}"></script>
+  </body>
 </html>
