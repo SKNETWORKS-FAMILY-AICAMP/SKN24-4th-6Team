@@ -11,17 +11,23 @@
       <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M12 16V4m0 0L8 8m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/>
       </svg>
-      <div class="dropzone-text">파일을 끌다 놓거나 클릭하여 업로드</div>
+      <div class="dropzone-text">파일을 끌어 놓거나 클릭하여 업로드</div>
       <div class="dropzone-sub">PDF · 최대 5MB</div>
-      <div class="dropzone-notice">
-        업로드된 계약서는 분석 후 자동 삭제됩니다.<br>
-        채팅방 당 하나의 계약서만 업로드 가능합니다.
-      </div>
+    </div>
+
+    <!-- 안내 문구 (드롭존 바깥, 별도 박스) -->
+    <div class="upload-notice">
+      업로드된 계약서는 분석 후 자동 삭제됩니다.<br>
+      채팅방 당 하나의 계약서만 업로드 가능합니다.
     </div>
 
     <!-- 4-3: 업로드 중 -->
     <div class="upload-progress" id="uploadProgress">
-      <div class="file-row">
+      <div class="upload-progress__header">
+        <img src="{% static 'images/icons/loading.svg' %}" class="upload-progress__spinner" alt="">
+        <span class="upload-progress__label">업로드 중...</span>
+      </div>
+      <div class="upload-progress__file-row">
         <div class="file-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -33,7 +39,6 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar" id="progressBar"></div>
       </div>
-      <div class="progress-label" id="progressLabel">업로드 중...</div>
     </div>
 
     <!-- 4-4: 5MB 초과 -->
@@ -44,7 +49,15 @@
 
     <!-- 4-5: 분석 중 -->
     <div class="analyzing" id="analyzing">
-      <div class="analyze-file-row">
+
+      <!-- 상단 헤더: loading 아이콘 + 내용 분석 중 -->
+      <div class="upload-progress__header">
+        <img src="{% static 'images/icons/loading.svg' %}" class="upload-progress__spinner" alt="">
+        <span class="upload-progress__label">내용 분석 중...</span>
+      </div>
+
+      <!-- 파일명 박스 + 프로그레스 바 -->
+      <div class="upload-progress__file-row">
         <div class="file-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
@@ -53,33 +66,43 @@
         </div>
         <div class="file-name" id="analyzeFileName">파일명.pdf</div>
       </div>
-      <ul class="step-list">
-        <li class="step-item">
-          <span class="step-badge done">✓</span>
-          <span>계약서 업로드</span>
-          <span class="step-status done">완료</span>
-        </li>
-        <li class="step-item">
-          <span class="step-badge active">2</span>
-          <span>계약서 인식(OCR)</span>
-          <span class="step-status active">
-            <span class="spinner"></span>진행 중
-          </span>
-        </li>
-        <li class="step-item">
-          <span class="step-badge pending">3</span>
-          <span>계약서 추출</span>
-        </li>
-      </ul>
-      <div class="analyze-notice">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="analyzeProgressBar"></div>
+      </div>
+
+      <!-- 스텝 리스트 박스 -->
+      <div class="step-box">
+        <ul class="step-list">
+          <li class="step-item" id="step1">
+            <span class="step-badge done">✓</span>
+            <span>계약서 업로드</span>
+            <span class="step-status done">완료</span>
+          </li>
+          <li class="step-item" id="step2">
+            <span class="step-badge active">2</span>
+            <span>계약서 인식(OCR)</span>
+            <span class="step-status active">
+              <span class="spinner"></span>진행 중
+            </span>
+          </li>
+          <li class="step-item" id="step3">
+            <span class="step-badge pending">3</span>
+            <span>계약서 추출</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 조건부 빨간 안내 박스 (기본 숨김, 필요 시 JS로 표시) -->
+      <div class="analyze-warning" id="analyzeWarning" style="display:none">
         파일 해상도가 낮거나 일부 내용이 정확하지 않을 수 있습니다.<br>
         추출된 내용을 직접 확인하고 수정해주세요.
       </div>
+
     </div>
 
-    <div class="modal-footer">
-      <button class="btn btn-cancel" id="cancelBtn">취소</button>
+    <div class="modal-footer" id="modalFooter">
       <button class="btn btn-save" id="saveBtn" disabled>저장</button>
+      <button class="btn btn-cancel" id="cancelBtn">취소</button>
     </div>
   </div>
 </div>

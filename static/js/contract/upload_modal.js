@@ -11,7 +11,6 @@ const saveBtn         = document.getElementById('saveBtn');
 const cancelBtn       = document.getElementById('cancelBtn');
 const reselectBtn     = document.getElementById('reselectBtn');
 const progressBar     = document.getElementById('progressBar');
-const progressLabel   = document.getElementById('progressLabel');
 
 let selectedFile = null;
 
@@ -85,68 +84,127 @@ function startUpload() {
   if (!selectedFile) return;
   showState('uploadProgress');
   saveBtn.disabled = true;
-
-  // 진행 바 애니메이션 (업로드 시뮬레이션)
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += 10;
-    progressBar.style.width = progress + '%';
-    progressLabel.textContent = `업로드 중... ${progress}%`;
-    if (progress >= 100) {
-      clearInterval(interval);
-      progressLabel.textContent = '업로드 완료!';
-      // analyzing 화면은 API 성공 후에만 표시 → uploadToServer에서 처리
-      uploadToServer(selectedFile);
-    }
-  }, 150);
+  uploadToServer(selectedFile);
 }
 
-// ── Django API 호출 ──
-async function uploadToServer(file) {
+// ── Django API 호출 (XHR progress 연동) ──
+function uploadToServer(file) {
   const chatroomId = getChatroomId();
   const formData = new FormData();
   formData.append('file', file);
 
-  try {
-    const response = await fetch(`/contract/${chatroomId}/upload/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': getCookie('csrftoken') },
-      body: formData,
-    });
-    const data = await response.json();
+  const xhr = new XMLHttpRequest();
 
-    if (data.success) {
-      // API 성공 → 4-5 분석 중 화면 표시
-      showState('analyzing');
-      setTimeout(() => {
-        closeModal();
-        refreshContractInfo(chatroomId);
-      }, 2000);
-    } else {
-      // API 실패 → 드롭존으로 초기화
-      alert(data.message || '업로드에 실패했습니다.');
+  // 실제 업로드 진행률 연동
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      const percent = Math.round((e.loaded / e.total) * 100);
+      progressBar.style.width = percent + '%';
+    }
+  });
+
+  xhr.addEventListener('load', () => {
+    try {
+      const data = JSON.parse(xhr.responseText);
+      if (data.success) {
+        document.getElementById('analyzeFileName').textContent =
+          document.getElementById('uploadFileName').textContent;
+        showState('analyzing');
+
+        if (data.low_confidence) {
+          document.getElementById('analyzeWarning').style.display = '';
+        }
+
+        // Step2(OCR) 완료 → Step3(추출) 진행 중으로 전환
+        setStep2Done();
+
+        // 1초 후 Step3(추출) 완료로 전환
+        setTimeout(() => {
+          setStep3Done();
+          // 완료 표시 잠깐 보여주고 모달 닫기
+          setTimeout(() => {
+            closeModal();
+            refreshContractInfo(chatroomId);
+          }, 800);
+        }, 1000);
+      } else {
+        alert(data.message || '업로드에 실패했습니다.');
+        resetToDropzone();
+      }
+    } catch {
+      alert('서버 오류가 발생했습니다.');
       resetToDropzone();
     }
-  } catch (err) {
-    // 서버 오류 → 드롭존으로 초기화
+  });
+
+  xhr.addEventListener('error', () => {
     alert('서버 오류가 발생했습니다.');
     resetToDropzone();
+  });
+
+  xhr.open('POST', `/contract/${chatroomId}/upload/`);
+  xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+  xhr.send(formData);
+}
+
+// ── 스텝 전환 헬퍼 ──
+function setStep2Done() {
+  // Step2: 진행 중 → 완료
+  const step2 = document.getElementById('step2');
+  step2.querySelector('.step-badge').className = 'step-badge done';
+  step2.querySelector('.step-badge').textContent = '✓';
+  step2.querySelector('.step-status').className = 'step-status done';
+  step2.querySelector('.step-status').textContent = '완료';
+
+  // Step3: 대기 → 진행 중
+  const step3 = document.getElementById('step3');
+  step3.querySelector('.step-badge').className = 'step-badge active';
+  step3.querySelector('.step-badge').textContent = '3';
+  const status3 = document.createElement('span');
+  status3.className = 'step-status active';
+  status3.innerHTML = '<span class="spinner"></span>진행 중';
+  step3.appendChild(status3);
+}
+
+function setStep3Done() {
+  // Step3: 진행 중 → 완료
+  const step3 = document.getElementById('step3');
+  step3.querySelector('.step-badge').className = 'step-badge done';
+  step3.querySelector('.step-badge').textContent = '✓';
+  const status3 = step3.querySelector('.step-status');
+  if (status3) {
+    status3.className = 'step-status done';
+    status3.textContent = '완료';
+  } else {
+    const newStatus = document.createElement('span');
+    newStatus.className = 'step-status done';
+    newStatus.textContent = '완료';
+    step3.appendChild(newStatus);
   }
 }
 
 // ── 상태 전환 ──
 function showState(state) {
-  dropzone.style.display       = 'none';
+  const notice = document.querySelector('.upload-notice');
+  const footer = document.getElementById('modalFooter');
+
+  // 모두 초기화
+  dropzone.style.display = 'none';
   uploadProgress.classList.remove('show');
   sizeError.classList.remove('show');
   analyzing.classList.remove('show');
+  notice.style.display = 'none';
+  footer.style.display = 'none';
 
   if (state === 'dropzone') {
     dropzone.style.display = '';
+    notice.style.display = '';
+    footer.style.display = '';
   } else if (state === 'uploadProgress') {
     uploadProgress.classList.add('show');
   } else if (state === 'sizeError') {
     sizeError.classList.add('show');
+    // 푸터, 안내문구 모두 숨김 → "다시 선택" 버튼만 표시
   } else if (state === 'analyzing') {
     analyzing.classList.add('show');
   }
@@ -157,6 +215,19 @@ function resetToDropzone() {
   selectedFile = null;
   saveBtn.disabled = true;
   progressBar.style.width = '0%';
+  document.getElementById('analyzeProgressBar').style.width = '0%';
+  document.getElementById('analyzeWarning').style.display = 'none';
+  // 스텝 상태 초기화
+  const step2 = document.getElementById('step2');
+  step2.querySelector('.step-badge').className = 'step-badge active';
+  step2.querySelector('.step-badge').textContent = '2';
+  step2.querySelector('.step-status').className = 'step-status active';
+  step2.querySelector('.step-status').innerHTML = '<span class="spinner"></span>진행 중';
+  const step3 = document.getElementById('step3');
+  step3.querySelector('.step-badge').className = 'step-badge pending';
+  step3.querySelector('.step-badge').textContent = '3';
+  const step3Status = step3.querySelector('.step-status');
+  if (step3Status) step3Status.remove();
   // 드롭존 원본 HTML 복구
   dropzone.innerHTML = dropzoneOriginalHTML;
   // fileInput 이벤트 재등록
