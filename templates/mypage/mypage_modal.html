@@ -1,0 +1,100 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/mypage/mypage.css' %}">
+
+<!-- ══════════════════════════════════════════
+     트리거: 사이드바 하단 프로필 버튼
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalSelfVerify">
+  <div class="mypage-card">
+    <h2 class="mypage-title">본인 인증</h2>
+    <p class="mypage-subtitle">본인 확인을 위해 현재 비밀번호를 입력해주세요</p>
+
+    <div class="mypage-field">
+      <label class="mypage-label">이메일</label>
+      <input type="email" class="mypage-input" id="verifyEmail"
+             value="{{ request.user.email }}" disabled>
+    </div>
+
+    <div class="mypage-field">
+      <label class="mypage-label">비밀번호</label>
+      <input type="password" class="mypage-input" id="verifyPassword"
+             placeholder="현재 비밀번호를 입력해주세요.">
+      <p class="mypage-error" id="verifyErr"></p>
+    </div>
+
+    <div class="mypage-btn-row">
+      <button class="mypage-btn mypage-btn--primary" id="btnVerifyConfirm">확인</button>
+      <button class="mypage-btn mypage-btn--outline" id="btnVerifyCancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     본인인증 성공 후 표시
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalMypage">
+  <div class="mypage-card">
+
+    <!-- 프로필 -->
+    <div class="mypage-profile">
+      <div class="mypage-avatar" id="mypageAvatar"></div>
+      <div class="mypage-profile-info">
+        <p class="mypage-profile-nickname" id="mypageNickname"></p>
+        <p class="mypage-profile-email" id="mypageEmail"></p>
+      </div>
+    </div>
+
+    <!-- 정보 수정 폼 -->
+    <p class="mypage-section-title">정보 수정</p>
+
+    <form id="mypageEditForm">
+      <div class="mypage-field">
+        <label class="mypage-label">닉네임 변경</label>
+        <input type="text" class="mypage-input" id="newNickname" autocomplete="off">
+        <p class="mypage-error" id="newNicknameErr"></p>
+      </div>
+
+      <div class="mypage-field">
+        <label class="mypage-label">새 비밀번호</label>
+        <input type="password" class="mypage-input" id="newPassword"
+               placeholder="새 비밀번호 입력 (영문, 숫자, 특수문자 중 2종 이상 8~16자)"
+               autocomplete="new-password">
+        <p class="mypage-error" id="newPasswordErr"></p>
+      </div>
+
+      <div class="mypage-field">
+        <label class="mypage-label">새 비밀번호 확인</label>
+        <input type="password" class="mypage-input" id="confirmPassword"
+               placeholder="새 비밀번호 확인" autocomplete="new-password">
+        <p class="mypage-error" id="confirmPasswordErr"></p>
+      </div>
+
+      <button type="submit" class="mypage-btn mypage-btn--primary mypage-btn--full"
+              id="btnMypageSubmit" disabled>수정하기</button>
+    </form>
+
+    <button type="button" class="mypage-btn mypage-btn--withdraw mypage-btn--full"
+            id="btnOpenWithdraw">탈퇴하기</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     탈퇴 확인 팝업 (6-1)
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalWithdraw">
+  <div class="mypage-card mypage-card--narrow">
+    <div class="mypage-warn-icon">⚠</div>
+    <h2 class="mypage-confirm-title">정말 탈퇴하시겠습니까?</h2>
+    <p class="mypage-confirm-desc">
+      이 작업은 되돌릴 수 없어요.<br>
+      탈퇴 시 모든 개인 정보 및 채팅 기록이 삭제됩니다.
+    </p>
+    <div class="mypage-btn-row">
+      <button class="mypage-btn mypage-btn--danger" id="btnWithdrawConfirm">탈퇴하기</button>
+      <button class="mypage-btn mypage-btn--outline" id="btnWithdrawCancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/mypage/mypage.js' %}"></script>

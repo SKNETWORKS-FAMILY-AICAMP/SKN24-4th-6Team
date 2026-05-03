@@ -768,3 +768,43 @@ body {
   font-size: 12px;
   color: var(--color-fg-muted);
 }
+
+/* 채팅방 메뉴 드롭다운 */
+.chatroom-item__menu-wrapper {
+  position: relative;
+}
+
+.chatroom-item__dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 10;
+  min-width: 120px;
+}
+
+.chatroom-item__dropdown--visible {
+  display: block;
+}
+
+.chatroom-item__delete-btn {
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  color: var(--color-red);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.chatroom-item__delete-btn:hover {
+  background-color: var(--color-secondary);
+}

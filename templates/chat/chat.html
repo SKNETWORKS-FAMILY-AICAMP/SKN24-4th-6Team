@@ -30,7 +30,12 @@
           <li class="chatroom-item {% if chatroom.chatroom_id == current_chatroom_id %}chatroom-item--active{% endif %}"
               data-id="{{ chatroom.chatroom_id }}">
             <span class="chatroom-item__title">{{ chatroom.title|default:"새 채팅" }}</span>
-            <button class="chatroom-item__menu" data-id="{{ chatroom.chatroom_id }}">···</button>
+            <div class="chatroom-item__menu-wrapper">
+              <button class="chatroom-item__menu" data-id="{{ chatroom.chatroom_id }}">···</button>
+              <div class="chatroom-item__dropdown" data-id="{{ chatroom.chatroom_id }}">
+                <button class="chatroom-item__delete-btn">삭제하기</button>
+              </div>
+            </div>
           </li>
           {% empty %}
           <li class="chatroom-list__empty">대화 내역이 없습니다.</li>
@@ -40,14 +45,15 @@
 
       <div class="sidebar__footer">
         <div class="sidebar__user">
-          <div class="sidebar__user-avatar">{{ request.user.username|first|upper }}</div>
-          <span class="sidebar__user-name">{{ request.user.username }}</span>
+          <div class="sidebar__user-avatar">{{ request.user.nickname|first|upper }}</div>
+          <span class="sidebar__user-name">{{ request.user.nickname }}</span>
         </div>
         <div class="sidebar__user-actions">
-          <a href="#" class="sidebar__icon-btn" title="프로필">
+          {% comment %} <a href="#" class="sidebar__icon-btn" title="프로필"> {% endcomment %}
+          <a href="#" id="btnProfile" class="sidebar__icon-btn" title="프로필">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
           </a>
-          <a href="#" class="sidebar__icon-btn" title="로그아웃">
+          <a href="#" class="sidebar__icon-btn" title="로그아웃" id="btnLogout">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </a>
         </div>
@@ -131,8 +137,22 @@
     </div>
   </div>
 
+  <!-- 로그아웃 확인 모달 -->
+  <div class="modal-overlay" id="modalLogoutOverlay">
+    <div class="modal">
+      <p class="modal__text">로그아웃 하시겠어요?</p>
+      <div class="modal__actions">
+        <button class="modal__btn modal__btn--danger" id="modalLogoutConfirm">로그아웃</button>
+        <button class="modal__btn modal__btn--cancel" id="modalLogoutCancel">취소</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 계약서 업로드 모달 - Contract 앱 include -->
   {% include 'contract/upload_modal.html' %}
+
+  <!-- 마이 페이지 모달 추가 -->
+  {% include 'mypage/mypage_modal.html' %}
 
   <script src="{% static 'js/chat.js' %}"></script>
 </body>

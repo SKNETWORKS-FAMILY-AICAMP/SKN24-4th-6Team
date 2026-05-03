@@ -194,7 +194,7 @@ def test_password_reset_success(client, user):
 @pytest.mark.django_db
 def test_me_requires_self_verify(client, user):
     client.force_login(user)
-    res = client.get("/api/mypage/me/")
+    res = client.get("/api/v1/me/")
     assert res.status_code == 403
 
 
@@ -204,6 +204,6 @@ def test_me_get_after_self_verify(client, user):
     session = client.session
     session["self_verified"] = True
     session.save()
-    res = client.get("/api/mypage/me/")
+    res = client.get("/api/v1/me/")
     assert res.status_code == 200
     assert res.data["email"] == user.email
