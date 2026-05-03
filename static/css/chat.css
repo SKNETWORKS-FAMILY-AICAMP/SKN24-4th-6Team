@@ -31,6 +31,11 @@ body {
   flex-direction: column;
   height: 100vh;
   padding: 24px 16px 16px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar--hidden {
+  margin-left: -260px;
 }
 
 .sidebar__header {
@@ -38,6 +43,10 @@ body {
   flex-direction: column;
   gap: 16px;
   margin-bottom: 24px;
+}
+
+.sidebar__logo {
+  text-align: center;
 }
 
 .sidebar__logo-img {
@@ -59,6 +68,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.15s;
+  justify-content: center;
 }
 
 .btn-new-chat:hover {
@@ -210,6 +220,42 @@ body {
 }
 
 /* ───────────────────────────────
+   Chat Header
+─────────────────────────────── */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-elevated);
+}
+
+.chat-header__toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-fg-muted);
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.chat-header__toggle:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-fg);
+}
+
+.chat-header__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+/* ───────────────────────────────
    Welcome Screen
 ─────────────────────────────── */
 .chat-welcome {
@@ -227,8 +273,12 @@ body {
   text-align: center;
 }
 
+.chat-welcome__logo {
+  width: 160px;   /* 80px → 120px */
+}
+
 .chat-welcome__logo img {
-  width: 80px;
+  width: 160px;    /* 80px → 120px */
   height: 80px;
   object-fit: contain;
 }

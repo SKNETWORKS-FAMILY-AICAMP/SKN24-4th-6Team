@@ -10,6 +10,8 @@ const chatInput        = document.getElementById("chatInput");
 const chatMessages     = document.getElementById("chatMessages");
 const chatWelcome      = document.getElementById("chatWelcome");
 const chatroomList     = document.getElementById("chatroomList");
+const btnToggleSidebar = document.getElementById("btnToggleSidebar");
+const chatTitle        = document.getElementById("chatTitle");
 
 const modalOverlay      = document.getElementById("modalOverlay");
 const modalConfirm      = document.getElementById("modalConfirm");
@@ -46,7 +48,6 @@ function getCsrfToken() {
 
 async function apiFetch(url, options = {}) {
   const res = await fetch(url, {
-    credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
       "X-CSRFToken": getCsrfToken(),
@@ -66,39 +67,8 @@ function getChatroomCount() {
 }
 
 /* ───────────────────────────────
-   URL 동기화 헬퍼
-   - id 가 null 이면 /chat/ 로, 아니면 /chat/{id}/ 로 push
-   - 이미 같은 경로면 push 하지 않음 (중복 history 방지)
-─────────────────────────────── */
-function pushChatUrl(id) {
-  const target = id ? `/chat/${id}/` : "/chat/";
-  if (window.location.pathname !== target) {
-    window.history.pushState(id ? { chatroomId: id } : {}, "", target);
-  }
-}
-
-/* ───────────────────────────────
-   초기 화면으로 리셋
-   - currentChatroomId 를 null 로, 메시지/활성표시 초기화 후 welcome 화면 표시
-   - pushHistory=true 면 URL 도 /chat/ 로 push
-─────────────────────────────── */
-function resetToWelcome({ pushHistory = true } = {}) {
-  currentChatroomId = null;
-  chatMessages.innerHTML = "";
-  showWelcomeArea();
-
-  chatroomList.querySelectorAll(".chatroom-item").forEach(el => {
-    el.classList.remove("chatroom-item--active");
-  });
-
-  if (pushHistory) pushChatUrl(null);
-}
-
-/* ───────────────────────────────
    새 채팅방 생성
-   - POST /api/v1/chatrooms (빈 body) 후 그 채팅방을 열어 URL 동기화
 ─────────────────────────────── */
-// TODO: 채팅방 생성 시 title 도 같이 보내도록 API 수정 후 body 업데이트
 async function createChatroom() {
   if (getChatroomCount() >= 10) {
     modalLimitOverlay.classList.add("modal-overlay--visible");
@@ -106,9 +76,9 @@ async function createChatroom() {
   }
 
   try {
-    const data = await apiFetch("/api/v1/chatrooms", {
+    const data = await apiFetch("/chat/chatrooms", {
       method: "POST",
-      body: JSON.stringify({}),
+      body: JSON.stringify({ title: "" }),
     });
     addChatroomToSidebar(data.chatroom_id, data.title || "새 채팅");
     await openChatroom(data.chatroom_id);
@@ -146,10 +116,8 @@ function addChatroomToSidebar(id, title) {
 /* ───────────────────────────────
    채팅방 열기 (메시지 목록 로드)
 ─────────────────────────────── */
-async function openChatroom(id, { pushHistory = true } = {}) {
+async function openChatroom(id) {
   currentChatroomId = id;
-
-  if (pushHistory) pushChatUrl(id);
 
   // 사이드바 활성 상태 변경
   chatroomList.querySelectorAll(".chatroom-item").forEach(el => {
@@ -160,7 +128,9 @@ async function openChatroom(id, { pushHistory = true } = {}) {
   chatMessages.innerHTML = "";
 
   try {
-    const data = await apiFetch(`/api/v1/chatrooms/${id}`);
+    const data = await apiFetch(`/chat/chatrooms/${id}`);
+
+    chatTitle.textContent = data.title || "새 채팅";
 
     if (data.chats && data.chats.length > 0) {
       showMessagesArea();
@@ -172,18 +142,6 @@ async function openChatroom(id, { pushHistory = true } = {}) {
     console.error("채팅방 로드 실패:", e);
   }
 }
-
-/* ───────────────────────────────
-   브라우저 뒤로/앞으로 이동 처리
-─────────────────────────────── */
-window.addEventListener("popstate", (event) => {
-  const id = event.state?.chatroomId;
-  if (id) {
-    openChatroom(id, { pushHistory: false });
-  } else {
-    resetToWelcome({ pushHistory: false });
-  }
-});
 
 /* ───────────────────────────────
    화면 전환
@@ -254,14 +212,13 @@ async function sendMessage() {
       return;
     }
     try {
-      const data = await apiFetch("/api/v1/chatrooms", {
+      const data = await apiFetch("/chat/chatrooms", {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({ title: content.slice(0, 30) }),
       });
       addChatroomToSidebar(data.chatroom_id, data.title || content.slice(0, 30));
       currentChatroomId = data.chatroom_id;
       setActiveChat(data.chatroom_id);
-      pushChatUrl(data.chatroom_id);
     } catch (e) {
       console.error("채팅방 생성 실패:", e);
       return;
@@ -277,114 +234,24 @@ async function sendMessage() {
   appendMessage("user", content);
   showLoadingBubble();
 
-  let assistantBubble = null;
-  let assistantText = "";
-  let errored = false;
-
   try {
-    const res = await fetch(`/api/v1/chatrooms/${currentChatroomId}/messages`, {
+    const data = await apiFetch(`/chat/chatrooms/${currentChatroomId}/chats`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCsrfToken(),
-        Accept: "text/event-stream",
-      },
       body: JSON.stringify({ content }),
     });
-
-    if (!res.ok || !res.body) {
-      throw new Error(`HTTP ${res.status}`);
-    }
-
-    await consumeSse(res.body, (event, data) => {
-      if (event === "token") {
-        if (!assistantBubble) {
-          removeLoadingBubble();
-          assistantBubble = appendAssistantStreamingBubble();
-        }
-        const delta = (data && data.delta) || "";
-        assistantText += delta;
-        assistantBubble.textContent = assistantText;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      } else if (event === "error") {
-        errored = true;
-      }
-    });
-
-    if (errored) {
-      removeLoadingBubble();
-      if (assistantBubble) {
-        assistantBubble.textContent = "죄송합니다. AI 서버 응답을 받지 못했습니다.";
-      } else {
-        appendMessage("assistant", "죄송합니다. AI 서버 응답을 받지 못했습니다.");
-      }
-    }
+    removeLoadingBubble();
+    appendMessage("assistant", data.content);
 
     // 사이드바 채팅방 제목 갱신 (첫 메시지 기준)
     updateChatroomTitle(currentChatroomId, content.slice(0, 30));
+    chatTitle.textContent = content.slice(0, 30);
   } catch (e) {
     removeLoadingBubble();
-    appendMessage(
-      "assistant",
-      "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-    );
+    appendMessage("assistant", "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     console.error("메시지 전송 실패:", e);
   } finally {
     isLoading = false;
   }
-}
-
-/* ───────────────────────────────
-   SSE 소비 헬퍼
-─────────────────────────────── */
-async function consumeSse(stream, onEvent) {
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-
-    let sep;
-    while ((sep = buffer.indexOf("\n\n")) !== -1) {
-      const raw = buffer.slice(0, sep);
-      buffer = buffer.slice(sep + 2);
-      const parsed = parseSseFrame(raw);
-      if (parsed.event) {
-        let data = {};
-        try { data = parsed.data ? JSON.parse(parsed.data) : {}; } catch { /* ignore */ }
-        onEvent(parsed.event, data);
-      }
-    }
-  }
-}
-
-function parseSseFrame(frame) {
-  let event = null;
-  const dataLines = [];
-  for (const line of frame.split("\n")) {
-    if (line.startsWith(":")) continue;
-    if (line.startsWith("event:")) event = line.slice(6).trim();
-    else if (line.startsWith("data:")) dataLines.push(line.slice(5).replace(/^ /, ""));
-  }
-  return { event, data: dataLines.join("\n") };
-}
-
-/* ───────────────────────────────
-   스트리밍용 어시스턴트 버블
-─────────────────────────────── */
-function appendAssistantStreamingBubble() {
-  const div = document.createElement("div");
-  div.className = "message message--assistant";
-  div.innerHTML = `
-    <img class="message__avatar" src="/static/images/logo.png" alt="아이고 청년">
-    <div class="message__bubble"></div>
-  `;
-  chatMessages.appendChild(div);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-  return div.querySelector(".message__bubble");
 }
 
 /* ───────────────────────────────
@@ -420,13 +287,15 @@ function openDeleteModal(id) {
 async function deleteChatroom() {
   if (!pendingDeleteId) return;
   try {
-    await apiFetch(`/api/v1/chatrooms/${pendingDeleteId}`, { method: "DELETE" });
+    await apiFetch(`/chat/chatrooms/${pendingDeleteId}`, { method: "DELETE" });
 
     const item = chatroomList.querySelector(`.chatroom-item[data-id="${pendingDeleteId}"]`);
     if (item) item.remove();
 
     if (currentChatroomId === pendingDeleteId) {
-      resetToWelcome();
+      currentChatroomId = null;
+      chatMessages.innerHTML = "";
+      showWelcomeArea();
     }
 
     // 목록이 비었으면 빈 상태 메시지 표시
@@ -503,10 +372,10 @@ chatroomList.querySelectorAll(".chatroom-item").forEach(item => {
   });
 });
 
-// 페이지 로드 시 활성 채팅방 자동 열기 (URL 에 chatroom_id 가 있는 경우)
+// 페이지 로드 시 활성 채팅방 자동 열기
 const activeItem = chatroomList.querySelector(".chatroom-item--active");
 if (activeItem) {
-  openChatroom(activeItem.dataset.id, { pushHistory: false });
+  currentChatroomId = activeItem.dataset.id;
 }
 
 /* ───────────────────────────────
@@ -631,3 +500,12 @@ btnCloseSidebar.addEventListener("click", hideContractSidebar);
 
 // 업로드 버튼 클릭
 btnUpload.addEventListener("click", openUploadModal);
+
+/* ───────────────────────────────
+   사이드바 토글
+─────────────────────────────── */
+const sidebar = document.querySelector(".sidebar");
+
+btnToggleSidebar.addEventListener("click", () => {
+  sidebar.classList.toggle("sidebar--hidden");
+});
