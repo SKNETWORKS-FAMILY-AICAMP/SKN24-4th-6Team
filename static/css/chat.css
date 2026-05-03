@@ -26,7 +26,8 @@ body {
 .sidebar {
   width: 260px;
   min-width: 260px;
-  background-color: var(--color-primary);
+  /* background-color: var(--color-primary); */
+  background-color: var(--color-bg);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -50,7 +51,7 @@ body {
 }
 
 .sidebar__logo-img {
-  width: 120px;
+  width: 160px;
   object-fit: contain;
 }
 
@@ -60,7 +61,7 @@ body {
   gap: 8px;
   width: 100%;
   padding: 10px 16px;
-  background-color: var(--color-accent);
+  background-color: var(--color-accent-strong);
   color: var(--color-white);
   border: none;
   border-radius: 8px;
@@ -72,7 +73,7 @@ body {
 }
 
 .btn-new-chat:hover {
-  background-color: var(--color-accent-strong);
+  background-color: var(--color-accent);
 }
 
 .btn-new-chat__icon {
@@ -88,7 +89,7 @@ body {
 
 .sidebar__section-title {
   font-size: 12px;
-  color: var(--color-secondary-150);
+  color: var(--color-text-soft);
   margin-bottom: 8px;
   padding: 0 4px;
 }
@@ -108,16 +109,17 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.15s;
-  color: var(--color-secondary-100);
+  color: var(--color-text-primary);
 }
 
 .chatroom-item:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--color-secondary);
 }
 
 .chatroom-item--active {
-  background-color: rgba(255, 255, 255, 0.14);
-  color: var(--color-white);
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 .chatroom-item__title {
@@ -131,7 +133,7 @@ body {
 .chatroom-item__menu {
   background: none;
   border: none;
-  color: var(--color-secondary-150);
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 14px;
   padding: 2px 4px;
@@ -147,7 +149,7 @@ body {
 
 .chatroom-list__empty {
   font-size: 13px;
-  color: var(--color-secondary-150);
+  color: var(--color-text-muted);
   padding: 12px;
   text-align: center;
 }
@@ -157,7 +159,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--color-border);
   margin-top: 16px;
 }
 
@@ -182,7 +184,7 @@ body {
 
 .sidebar__user-name {
   font-size: 13px;
-  color: var(--color-secondary-100);
+  color: var(--color-text-primary);
 }
 
 .sidebar__user-actions {
@@ -197,14 +199,14 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  color: var(--color-secondary-150);
+  color: var(--color-text-muted);
   text-decoration: none;
   transition: background-color 0.15s, color 0.15s;
 }
 
 .sidebar__icon-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--color-white);
+  background-color: var(--color-secondary);
+  color: var(--color-text-primary);
 }
 
 /* ───────────────────────────────
@@ -216,7 +218,8 @@ body {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--color-bg);
+  /* background-color: var(--color-bg); 기존 */
+  background-color: #fff;
 }
 
 /* ───────────────────────────────
@@ -249,6 +252,12 @@ body {
   color: var(--color-fg);
 }
 
+.chat-header__toggle img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
 .chat-header__title {
   font-size: 16px;
   font-weight: 600;
@@ -274,12 +283,12 @@ body {
 }
 
 .chat-welcome__logo {
-  width: 160px;   /* 80px → 120px */
+  width: 240px;   /* 80px → 120px */
+  height: 120px;
 }
 
 .chat-welcome__logo img {
-  width: 160px;    /* 80px → 120px */
-  height: 80px;
+  width: 150px;    /* 80px → 120px */
   object-fit: contain;
 }
 
@@ -325,6 +334,8 @@ body {
 
 .message--assistant {
   align-items: flex-start;
+  flex-direction: row;
+  gap: 12px;
 }
 
 .message__bubble {
@@ -342,18 +353,20 @@ body {
 }
 
 .message--assistant .message__bubble {
-  background-color: var(--color-bg-elevated);
+  /* background-color: var(--color-bg-elevated); */
+  background-color: var(--color-bg);
   color: var(--color-fg);
   border: 1px solid var(--color-border);
   border-bottom-left-radius: 4px;
 }
 
 .message__avatar {
-  width: 32px;
-  height: 32px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  margin-bottom: 6px;
+  /* margin-bottom: 6px; */
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 /* ───────────────────────────────
@@ -472,6 +485,19 @@ body {
 
 .modal-overlay--visible {
   display: flex;
+}
+
+/* ── 카드 ── */
+.modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background: var(--color-bg-elevated);
+  border-radius: 16px;
+  padding: 36px 32px 32px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(15, 30, 55, 0.18);
 }
 
 .modal {
@@ -807,4 +833,10 @@ body {
 
 .chatroom-item__delete-btn:hover {
   background-color: var(--color-secondary);
+}
+
+.chatroom-item__delete-btn img {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) saturate(100%) invert(23%) sepia(89%) saturate(6943%) hue-rotate(357deg) brightness(96%) contrast(114%); /* 아이콘 빨간색으로 */
 }
