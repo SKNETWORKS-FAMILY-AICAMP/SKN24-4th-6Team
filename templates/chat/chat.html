@@ -19,7 +19,7 @@
         </div>
         <button class="btn-new-chat" id="btnNewChat">
           <span class="btn-new-chat__icon">+</span>
-          새채팅
+          새 채팅
         </button>
       </div>
 
@@ -33,7 +33,10 @@
             <div class="chatroom-item__menu-wrapper">
               <button class="chatroom-item__menu" data-id="{{ chatroom.chatroom_id }}">···</button>
               <div class="chatroom-item__dropdown" data-id="{{ chatroom.chatroom_id }}">
-                <button class="chatroom-item__delete-btn">삭제하기</button>
+                <button class="chatroom-item__delete-btn">
+                  <img src="{% static 'images/icons/delete.svg' %}" alt="삭제">
+                  삭제하기
+                </button>
               </div>
             </div>
           </li>
@@ -61,16 +64,13 @@
     </aside>
 
     <!-- 메인 채팅 영역 -->
+    {% comment %} <main class="chat-main" id="chatMain" style="background-color : #fff;"> {% endcomment %}
     <main class="chat-main" id="chatMain">
 
       <!-- 헤더 -->
       <div class="chat-header">
         <button class="chat-header__toggle" id="btnToggleSidebar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
+          <img id="toggleIcon" src="{% static 'images/icons/close.svg' %}" alt="토글">
         </button>
         <h1 class="chat-header__title" id="chatTitle">새 채팅</h1>
       </div>
@@ -79,7 +79,8 @@
       <div class="chat-welcome" id="chatWelcome">
         <div class="chat-welcome__inner">
           <div class="chat-welcome__logo">
-            <img src="{% static 'img/main_img.svg' %}" alt="아이고 청년">
+            {% comment %} <img src="{% static 'img/main_img.svg' %}" alt="아이고 청년"> {% endcomment %}
+            <img src="{% static 'img\sub_img.svg' %}" alt="아이고 청년">
           </div>
           <h1 class="chat-welcome__title">아이고, 무슨 걱정 있으신가요?</h1>
           <p class="chat-welcome__subtitle">계약서 PDF를 올려보세요. 더 자세한 답변을 받을 수 있어요!</p>
