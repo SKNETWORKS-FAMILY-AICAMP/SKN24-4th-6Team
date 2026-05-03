@@ -22,7 +22,7 @@ const modalLimitConfirm = document.getElementById("modalLimitConfirm");
 // 업로드 모달
 const modalUpload        = document.getElementById("modalUpload");
 const uploadArea         = document.getElementById("uploadArea");
-const fileInput          = document.getElementById("fileInput");
+const chatFileInput      = document.getElementById("fileInput");
 const modalUploadConfirm = document.getElementById("modalUploadConfirm");
 const modalUploadCancel  = document.getElementById("modalUploadCancel");
 
@@ -519,16 +519,16 @@ function openUploadModal() {
 
 function closeUploadModal() {
   modalUpload.classList.remove("modal-overlay--visible");
-  fileInput.value = "";
+  chatFileInput.value = "";
 }
 
 // 업로드 영역 클릭
 uploadArea.addEventListener("click", () => {
-  fileInput.click();
+  chatFileInput.click();
 });
 
 // 파일 선택
-fileInput.addEventListener("change", (e) => {
+chatFileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
     if (file.type !== "application/pdf") {
@@ -568,7 +568,7 @@ uploadArea.addEventListener("drop", (e) => {
       return;
     }
     uploadedFile = file;
-    fileInput.files = e.dataTransfer.files;
+    chatFileInput.files = e.dataTransfer.files;
   }
 });
 
