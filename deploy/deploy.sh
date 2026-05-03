@@ -25,6 +25,7 @@ echo "▶ [5/5] systemd: ${SERVICE_NAME} 재시작"
 sudo systemctl restart "${SERVICE_NAME}"
 
 # 재시작 직후 상태 확인 — 실패하면 non-zero 반환되어 set -e 가 잡음
-sudo systemctl is-active --quiet "${SERVICE_NAME}"
+# `--quiet` 는 sudoers 규칙(`is-active gunicorn`) 과 패턴이 안 맞아 비번을 묻게 되므로 제외
+sudo systemctl is-active "${SERVICE_NAME}" >/dev/null
 
 echo "✓ 배포 완료 ($(git rev-parse --short HEAD))"
