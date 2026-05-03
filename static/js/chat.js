@@ -252,7 +252,7 @@ function showMessagesArea() {
 }
 
 /* ───────────────────────────────
-   메시지 렌더링
+   메시지 렌더링 
 ─────────────────────────────── */
 function appendMessage(role, content) {
   const div = document.createElement("div");

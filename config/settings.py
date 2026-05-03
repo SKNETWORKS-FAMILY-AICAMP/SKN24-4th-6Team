@@ -208,9 +208,17 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # nginx 가 X-Forwarded-Proto: https 헤더를 넣어주면 Django 가 HTTPS 로 인식
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# 운영(DEBUG=False)에서만 secure cookie. 로컬 HTTP 개발 시에는 꺼짐
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+# 운영(DEBUG=False) 기본값: secure cookie. SSL 인증서 발급 전엔 .env 에서
+# DJANGO_SESSION_COOKIE_SECURE=False / DJANGO_CSRF_COOKIE_SECURE=False 로
+# 일시 오버라이드 (HTTP 환경에서 브라우저가 Secure 쿠키를 무시해 세션이 끊기는 문제 회피).
+SESSION_COOKIE_SECURE = os.environ.get(
+    "DJANGO_SESSION_COOKIE_SECURE",
+    "True" if not DEBUG else "False",
+) == "True"
+CSRF_COOKIE_SECURE = os.environ.get(
+    "DJANGO_CSRF_COOKIE_SECURE",
+    "True" if not DEBUG else "False",
+) == "True"
 
 # HTTP -> HTTPS 강제 리다이렉트. 인증서 발급 전엔 False 유지 (chicken-and-egg 방지)
 SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "False") == "True"
