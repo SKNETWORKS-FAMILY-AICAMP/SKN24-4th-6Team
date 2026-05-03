@@ -1,7 +1,13 @@
 @import "../tokens.css";
 
 /* ── Reset ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
@@ -13,21 +19,37 @@ body {
   flex-direction: column;
 }
 
-a { color: var(--color-accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-/* ── Form ── */
-.field { margin-bottom: 14px; }
-.field label { 
-  display: block; 
-  font-size: 13px; 
-  font-weight: 600; 
-  color: var(--color-fg-soft); 
-  margin-bottom: 6px; 
+a {
+  color: var(--color-accent);
+  text-decoration: none;
 }
 
-.field-row { display: flex; gap: 8px; align-items: center; }
-.field-row input { flex: 1; }
+a:hover {
+  text-decoration: underline;
+}
+
+/* ── Form ── */
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-fg-soft);
+  margin-bottom: 6px;
+}
+
+.field-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.field-row input {
+  flex: 1;
+}
 
 /* 인증코드 입력창 — 타이머를 입력창 오른쪽에 겹쳐 표시 */
 .code-input-wrap {
@@ -65,9 +87,18 @@ input[type="text"] {
   box-shadow: 0px 1px 3px rgba(15, 30, 55, 0.05), 0px 6px 16px rgba(15, 30, 55, 0.06);
 }
 
-input:focus { border-color: var(--color-border-focus); }
-input::placeholder { color: var(--color-fg-muted); }
-input:disabled { background: var(--color-bg); opacity: 0.6; }
+input:focus {
+  border-color: var(--color-border-focus);
+}
+
+input::placeholder {
+  color: var(--color-fg-muted);
+}
+
+input:disabled {
+  background: var(--color-bg);
+  opacity: 0.6;
+}
 
 /* ── Buttons ── */
 button {
@@ -94,7 +125,9 @@ button {
   margin-top: 8px;
 }
 
-.btn-primary:hover { background: var(--color-primary-hover); }
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
 
 .btn-sm {
   background: var(--color-secondary);
@@ -108,9 +141,13 @@ button {
   flex-shrink: 0;
 }
 
-.btn-sm-primary:hover { background: var(--color-primary-hover); }
+.btn-sm-primary:hover {
+  background: var(--color-primary-hover);
+}
 
-.btn-sm:hover { background: var(--color-secondary-100); }
+.btn-sm:hover {
+  background: var(--color-secondary-100);
+}
 
 .btn-outline {
   background: transparent;
@@ -121,9 +158,14 @@ button {
   margin-top: 8px;
 }
 
-.btn-outline:hover { background: var(--color-bg); }
+.btn-outline:hover {
+  background: var(--color-bg);
+}
 
-button:disabled { opacity: 0.45; cursor: not-allowed; }
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 
 /* ── 타이머 ── */
 .timer {
@@ -136,6 +178,20 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 
 /* ── 에러 / 힌트 ── */
-.error { color: var(--color-red); font-size: 12px; margin-top: 5px; min-height: 16px; }
-.hint  { text-align: center; font-size: 13px; color: var(--color-fg-muted); margin-top: 18px; }
-.hint a { color: var(--color-accent); }
+.error {
+  color: var(--color-red);
+  font-size: 12px;
+  margin-top: 5px;
+  min-height: 16px;
+}
+
+.hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-fg-muted);
+  margin-top: 18px;
+}
+
+.hint a {
+  color: var(--color-accent);
+}
