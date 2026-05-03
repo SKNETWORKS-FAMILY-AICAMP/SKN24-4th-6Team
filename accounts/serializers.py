@@ -1,8 +1,9 @@
 import re
+
 from django.utils import timezone
 from rest_framework import serializers
-from core.models import User, EmailVerification
 
+from core.models import EmailVerification, User
 
 # ----------------------------------------------------------------
 # 공통 검증 함수
