@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   // TODO: 실제 API 연결 시 활성화
   // try {
-  //   const res = await api('GET', '/api/users/me/');
+  //   const res = await api('GET', '/api/mypage/me/');
   //   if (res.ok) {
   //     const user = await res.json();
   //     document.getElementById('userNickname').textContent = user.nickname;
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (newPw) payload.password = newPw;
 
     // TODO: 실제 API 연결 시 활성화
-    // const res = await api('PATCH', '/api/users/me/', payload);
+    // const res = await api('PATCH', '/api/mypage/me/', payload);
 
     // 깡통 동작 — 임시
     alert('[깡통] 수정 요청\n' + JSON.stringify(payload, null, 2));
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   document.getElementById('confirmWithdrawBtn').addEventListener('click', async () => {
     // TODO: 실제 API 연결 시 활성화
-    // const res = await api('DELETE', '/api/users/me/');
+    // const res = await api('DELETE', '/api/mypage/me/');
 
     // 깡통 동작 — 임시
     alert('[깡통] 회원 탈퇴 요청');

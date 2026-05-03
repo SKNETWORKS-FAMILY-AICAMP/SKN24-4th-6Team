@@ -46,6 +46,7 @@ INSTALLED_APPS = [
   "health",
   "chat",
   "contract",
+  "mypage",
 ]
 
 

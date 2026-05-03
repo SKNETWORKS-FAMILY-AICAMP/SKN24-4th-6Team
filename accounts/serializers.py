@@ -221,54 +221,6 @@ class PasswordResetSerializer(serializers.Serializer):
 
 
 # ----------------------------------------------------------------
-# 본인인증
-# ----------------------------------------------------------------
-
-class SelfVerifySerializer(serializers.Serializer):
-    """
-    본인인증 모달
-    내정보 접근 전 현재 비밀번호 확인
-    """
-    password = serializers.CharField(write_only=True)
-
-
-# ----------------------------------------------------------------
-# 내정보 수정
-# ----------------------------------------------------------------
-
-class ProfileUpdateSerializer(serializers.Serializer):
-    """
-    닉네임, 비밀번호 중 하나 이상 변경 시 수정하기 버튼 활성화
-    """
-    nickname = serializers.CharField(max_length=6, required=False)
-    password = serializers.CharField(write_only=True, required=False)
-    password_confirm = serializers.CharField(write_only=True, required=False)
-
-    def validate_nickname(self, value):
-        return validate_nickname_format(value)
-
-    def validate_password(self, value):
-        return validate_password_format(value)
-
-    def validate(self, attrs):
-        # 변경 항목이 아무것도 없는 경우
-        if not attrs.get('nickname') and not attrs.get('password'):
-            raise serializers.ValidationError('변경할 항목이 없습니다.')
-
-        # 비밀번호 변경 시 확인 필드도 필수
-        if attrs.get('password'):
-            if not attrs.get('password_confirm'):
-                raise serializers.ValidationError(
-                    {'password_confirm': '새 비밀번호 확인을 입력해주세요.'}
-                )
-            if attrs['password'] != attrs['password_confirm']:
-                raise serializers.ValidationError(
-                    {'password_confirm': '비밀번호가 일치하지 않습니다.'}
-                )
-        return attrs
-
-
-# ----------------------------------------------------------------
 # 응답 전용
 # ----------------------------------------------------------------
 

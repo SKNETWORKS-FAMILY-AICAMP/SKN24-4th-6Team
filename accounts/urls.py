@@ -17,9 +17,4 @@ urlpatterns = [
     # 비밀번호 재설정 (비로그인 — 홈 모달에서 사용)
     path('password/reset/', views.PasswordResetView.as_view(), name='password-reset'),
 
-    # 본인인증
-    path('me/verify/', views.SelfVerifyView.as_view(), name='self-verify'),
-
-    # 내정보 (GET·PATCH·DELETE /api/users/me/)
-    path('me/', views.MeView.as_view(), name='me'),
 ]
