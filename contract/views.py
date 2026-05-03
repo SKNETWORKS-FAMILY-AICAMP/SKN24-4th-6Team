@@ -41,7 +41,20 @@ def upload_contract(request, chatroom_id):
     )
   except AigoAIError as exc:
     logger.warning("aigo-ai pdf/analyze 실패: %s", exc)
-    return JsonResponse({"success": False, "message": "AI 서버 오류"}, status=502)
+    # OCR 실패는 422, 나머지는 502
+    exc_str = str(exc)
+    if "401" in exc_str:
+      status = 401
+    elif "422" in exc_str:
+      status = 422
+    elif "503" in exc_str:
+      status = 503
+    else:
+      status = 502
+    return JsonResponse({"success": False, "message": "AI 서버 오류"}, status=status)
+  except Exception as exc:
+    logger.exception("upload_contract 예외: %s", exc)
+    return JsonResponse({"success": False, "message": "서버 오류"}, status=502)
 
   confidence = result.get("confidence", None)
 
@@ -56,7 +69,7 @@ def upload_contract(request, chatroom_id):
   contract = Contract.objects.create(  # 2. 새 Contract 생성 (새로운 contract_id 발급)
     chatroom_id=chatroom_id,
     title=file.name,
-    content=result.get("content", ""),
+    content=result.get("pii_masked_text", ""),
     size=file.size,
   )
   # [PropertyInfo Table]: 새로운 PDF를 올리면, contract_id만 담긴 빈 테이블이 우선 생성됨.
@@ -117,8 +130,8 @@ def update_property(request, chatroom_id):
     property_info = PropertyInfo.objects.get(contract=contract)
 
     property_info.location = request.POST.get("location", property_info.location)
-    property_info.start_date = request.POST.get("period", property_info.start_date)
-    property_info.end_date = request.POST.get("period", property_info.end_date)
+    property_info.start_date = request.POST.get("start_date", property_info.start_date)
+    property_info.end_date = request.POST.get("end_date", property_info.end_date)
     property_info.month_rent = request.POST.get("month_rent", property_info.month_rent)
     property_info.deposit = request.POST.get("deposit", property_info.deposit)
     property_info.house_cost = request.POST.get("house_cost", property_info.house_cost)

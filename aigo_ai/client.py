@@ -1,3 +1,4 @@
+import uuid
 from collections.abc import Mapping
 from contextlib import AbstractContextManager
 from typing import Any
@@ -76,10 +77,10 @@ def post_multipart(
   """
   return httpx.post(
     f"{_base_url()}{path}",
-    headers=_headers(
-      user_id=user_id,
-      chatroom_id=chatroom_id,
-    ),
+    headers={
+      **_headers(user_id=user_id, chatroom_id=chatroom_id),
+      "X-Idempotency-Key": str(uuid.uuid4()),
+    },
     files=files,
     timeout=_timeout(read=timeout),
   )
