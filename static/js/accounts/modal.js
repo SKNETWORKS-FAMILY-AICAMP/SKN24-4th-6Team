@@ -96,10 +96,11 @@ document.addEventListener('keydown', e => {
 
 // ── 약관 동의 모달 ──
 
-// 필수 항목(개인정보 동의) 체크 여부로 다음 버튼 활성화
+// 필수 항목 두 가지 모두 체크해야 다음 버튼 활성화
 function checkTerms() {
   document.getElementById('termsNextBtn').disabled =
-    !document.getElementById('termsPrivacy').checked;
+    !document.getElementById('termsPrivacy').checked ||
+    !document.getElementById('termsAI').checked;
 }
 
 // 모달 닫을 때 체크박스 초기화
