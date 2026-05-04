@@ -98,9 +98,10 @@ async function signupSendCode() {
     document.getElementById('signupVerifyBtn').disabled = false;
     startSignupTimer();
   } else {
+    document.getElementById('signupSendBtn').disabled = false;
     const data = await res.json();
     document.getElementById('signupEmailErr').textContent =
-      data.errors?.email?.[0] ?? data.errors?.non_field_errors?.[0] ?? '오류가 발생했습니다.';
+      data.errors?.email?.[0] ?? data.errors?.non_field_errors?.[0] ?? '이미 이메일로 인증코드가 발송되었습니다. 잠시 후 다시 시도해주세요.';
   }
 }
 
@@ -148,11 +149,11 @@ async function signup() {
     document.getElementById('signupPwErr').textContent = '비밀번호를 입력해주세요.';
     return;
   }
-  const pwHasLetter  = /[a-zA-Z]/.test(password);
-  const pwHasNumber  = /[0-9]/.test(password);
+  const pwHasLetter = /[a-zA-Z]/.test(password);
+  const pwHasNumber = /[0-9]/.test(password);
   const pwHasSpecial = /[^a-zA-Z0-9]/.test(password);
   if (password.length < 8 || password.length > 16 ||
-      [pwHasLetter, pwHasNumber, pwHasSpecial].filter(Boolean).length < 2) {
+    [pwHasLetter, pwHasNumber, pwHasSpecial].filter(Boolean).length < 2) {
     document.getElementById('signupPwErr').textContent = '비밀번호 형식이 잘못 되었습니다.';
     return;
   }
@@ -233,9 +234,10 @@ async function resetSendCode() {
     document.getElementById('resetVerifyBtn').disabled = false;
     startResetTimer();
   } else {
+    document.getElementById('resetSendBtn').disabled = false;
     const data = await res.json();
     document.getElementById('resetEmailErr').textContent =
-      data.errors?.email?.[0] ?? data.errors?.non_field_errors?.[0] ?? '오류가 발생했습니다.';
+      data.errors?.email?.[0] ?? data.errors?.non_field_errors?.[0] ?? '이미 이메일로 인증코드가 발송되었습니다. 잠시 후 다시 시도해주세요.';
   }
 }
 
@@ -281,11 +283,11 @@ async function resetPw() {
     document.getElementById('resetPwErr').textContent = '비밀번호를 입력해주세요.';
     return;
   }
-  const pwHasLetter  = /[a-zA-Z]/.test(password);
-  const pwHasNumber  = /[0-9]/.test(password);
+  const pwHasLetter = /[a-zA-Z]/.test(password);
+  const pwHasNumber = /[0-9]/.test(password);
   const pwHasSpecial = /[^a-zA-Z0-9]/.test(password);
   if (password.length < 8 || password.length > 16 ||
-      [pwHasLetter, pwHasNumber, pwHasSpecial].filter(Boolean).length < 2) {
+    [pwHasLetter, pwHasNumber, pwHasSpecial].filter(Boolean).length < 2) {
     document.getElementById('resetPwErr').textContent = '비밀번호 형식이 잘못 되었습니다.';
     return;
   }
@@ -304,7 +306,7 @@ async function resetPw() {
     password_confirm,
   });
   if (res.ok) {
-    alert('비밀번호가 변경되었습니다.');
+    alert('비밀번호가 변경되었습니다.\n재로그인을 위해 로그인 화면으로 이동합니다.');
     closeModal('resetModal');
     openModal('loginModal');
   } else {

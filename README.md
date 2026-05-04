@@ -1,9 +1,8 @@
 # 🏠 아이고 청년 (Aigo Youth) — AI 기반 임대차 계약서 검토 웹 서비스
 
-**AI 기반 임대차 계약서 검토 서비스 플랫폼
+**AI 기반 임대차 계약서 검토 서비스 플랫폼**
 
-> [SKN24 4차 프로젝트] 4차 단위 프로젝트 — 3차 LLM RAG 챗봇(Streamlit MVP)을 **Django + FastAPI 기반 웹 서비스**로 확장 개발
-
+> [SKN24 4차 프로젝트] 4차 단위 프로젝트 — 3차 LLM RAG 챗봇(Streamlit MVP)을 **Django + FastAPI 기반 웹 서비스**로 확장
 
 ---
 
@@ -15,21 +14,19 @@
 
 ### 팀원
 
-| 이름  | GitHub |
-|------|--------|
-| 고아라 | [Akoh-0909](https://github.com/Akoh-0909) |
-| 김정현 | [Jeich-16](https://github.com/Jeich-16) |
+| 이름   | GitHub                                              |
+| ------ | --------------------------------------------------- |
+| 고아라 | [Akoh-0909](https://github.com/Akoh-0909)           |
+| 김정현 | [Jeich-16](https://github.com/Jeich-16)             |
 | 진세형 | [gugu-eightyone](https://github.com/gugu-eightyone) |
-| 임정희 | [bigmoon](https://github.com/bigmooon) |
-| 정석원 | [JeongSW123](https://github.com/JeongSW123) |
-
+| 임정희 | [bigmooon](https://github.com/bigmooon)             |
+| 정석원 | [JeongSW123](https://github.com/JeongSW123)         |
 
 ---
 
-
 ## 2. 프로젝트 개요
 
-### 2-1. 프로젝트 소개 
+### 2-1. 프로젝트 소개
 
 부동산 임대차 계약은 보증금, 특약, 계약 기간 등 꼼꼼히 따져야 할 내용이 많지만, 법률 지식이 부족한 사회 초년생이나 일반 임차인이 스스로 모든 정보나 내용을 파악하기는 쉽지 않습니다.
 
@@ -43,7 +40,7 @@
 
 ---
 
-### 2-2. 배경 및 필요성 
+### 2-2. 배경 및 필요성
 
 #### 사회적 배경
 
@@ -51,13 +48,13 @@
 
 **전세사기 피해자 연령 분포 (2025.05 기준)**
 
-| 연령대 | 피해자 수 | 비율 |
-|:------|:---------|:----:|
-| 20대 | 7,854명 | 25.8% |
-| 30대 | 14,983명 | 49.3% |
-| 40대 | 4,240명 | 13.9% |
-| 50대 이상 | 3,323명 | 11.0% |
-| **전체** | **약 30,400명** | **100%** |
+| 연령대    | 피해자 수       |   비율   |
+| :-------- | :-------------- | :------: |
+| 20대      | 7,854명         |  25.8%   |
+| 30대      | 14,983명        |  49.3%   |
+| 40대      | 4,240명         |  13.9%   |
+| 50대 이상 | 3,323명         |  11.0%   |
+| **전체**  | **약 30,400명** | **100%** |
 
 > 20~30대 청년층이 전체 피해의 **75.1%**를 차지
 
@@ -71,13 +68,13 @@
 
 ---
 
-### 2-3. 기존 서비스의 한계 
+### 2-3. 기존 서비스의 한계
 
-| 서비스 | 운영 주체 | 핵심 기능 | 한계 |
-|--------|-----------|-----------|------|
-| **전세사기 위험분석 보고서** | 서울시 + 내집스캔 | 주소 입력 → 집주인·주택 위험도 점수 | 계약 내용·특약 분석 불가 / 서울 청년 한정 / 쿠폰 수량 제한 |
-| **AI 기반 거래 안전망 솔루션** | 경기도 + NIA | 주소 입력 → 등기부·시세·근저당 분석 | **2026년 하반기 시범운영 예정, 현재 미출시** / 경기도 한정 |
-| **앨리비** | BHSN | AI 계약서 검토·관리 | B2B 기업 법무팀 대상 유료 구독 / 임대차 특화 없음 |
+| 서비스                         | 운영 주체         | 핵심 기능                           | 한계                                                       |
+| ------------------------------ | ----------------- | ----------------------------------- | ---------------------------------------------------------- |
+| **전세사기 위험분석 보고서**   | 서울시 + 내집스캔 | 주소 입력 → 집주인·주택 위험도 점수 | 계약 내용·특약 분석 불가 / 서울 청년 한정 / 쿠폰 수량 제한 |
+| **AI 기반 거래 안전망 솔루션** | 경기도 + NIA      | 주소 입력 → 등기부·시세·근저당 분석 | **2026년 하반기 시범운영 예정, 현재 미출시** / 경기도 한정 |
+| **앨리비**                     | BHSN              | AI 계약서 검토·관리                 | B2B 기업 법무팀 대상 유료 구독 / 임대차 특화 없음          |
 
 → **임대차 계약/특약 내용을 법령·판례 근거로 조항을 분석해주고 질의응답할 수 있는 일반인 대상의 무료 B2C 서비스는 현재 존재하지 않습니다.**
 
@@ -88,29 +85,30 @@
 #### 🔍 국내 AI 계약 검토 서비스 현황 및 차별성
 
 💡**서비스 포지셔닝**:
-현재 상용화된 서비스들은 **주소 기반의 위험도 분석**이나 **B2B 범용 계약 검토**에 치중되어 있습니다. 
+현재 상용화된 서비스들은 **주소 기반의 위험도 분석**이나 **B2B 범용 계약 검토**에 치중되어 있습니다.
 본 프로젝트는 **임대차 계약서 내용과 특약**을 법령·판례 근거로 질의응답할 수 있는 **국내 유일의 B2C 일반인 대상 B2C 대화형 AI 서비스**가 목표이며, 주소기반의 위험도 조회와 B2B 서비스의 양분화 사이에서 그 공백을 메우는 독보적인 포지션을 가집니다.
 
-
 1. **"주소"가 아닌 "내용"에 집중**
-   - 공공 서비스가 *'이 집이 안전한가?'* 를 묻는다면, 우리는 *'내가 사인할 이 계약서의 문구가 나에게 안전한가?'* 에 답합니다.
+   - 공공 서비스가 _'이 집이 안전한가?'_ 를 묻는다면, 우리는 _'내가 사인할 이 계약서의 문구가 나에게 안전한가?'_ 에 답합니다.
 
 2. **임대차 특화 RAG 파이프라인**
    - 일반 법률 데이터가 아닌 **주택임대차보호법, 실제 판례, 행정 해석례**에 한정한 도메인 특화 검색을 통해 생성형 AI의 할루시네이션을 최소화하고 정확한 법적 근거를 제시합니다.
 
 3. **자연어 질의응답 (Interactive Q&A)**
-   - 어려운 법 용어를 몰라도 *"이 특약이 나중에 보증금을 돌려받을 때 방해가 될까요?"* 와 같이 **일상적인 언어로 소통**하며 위험 요소를 파악할 수 있습니다.
+   - 어려운 법 용어를 몰라도 _"이 특약이 나중에 보증금을 돌려받을 때 방해가 될까요?"_ 와 같이 **일상적인 언어로 소통**하며 위험 요소를 파악할 수 있습니다.
 
 4. **PDF 계약서 직접 분석**
    - 계약서 PDF를 업로드하면 OCR로 텍스트를 추출하고, 개인정보(이름·주민번호·연락처 등)를 자동 마스킹한 후 분석합니다.
    - 사용자는 자신의 실제 계약서 내용을 그대로 분석에 활용할 수 있습니다.
 
 [BEFORE]
->- 다양한 입력 방식 지원: 특약 직접 입력 / 상황 설명 / 계약 조건 질의
->- 할루시네이션 방지: 내부 문서(법령·판례·해석례)에 근거한 답변만 생성
->- 임차인이 계약서 독소조항·불리한 조항을 쉽게 파악할 수 있도록 지원
+
+> - 다양한 입력 방식 지원: 특약 직접 입력 / 상황 설명 / 계약 조건 질의
+> - 할루시네이션 방지: 내부 문서(법령·판례·해석례)에 근거한 답변만 생성
+> - 임차인이 계약서 독소조항·불리한 조항을 쉽게 파악할 수 있도록 지원
 
 [AFTER]
+
 - **3차 Streamlit MVP → 웹 서비스 확장**: 다중 사용자가 동시에 사용할 수 있는 회원 기반 웹 서비스 구현
 - **PDF 계약서 직접 분석 기능 추가**: 텍스트 입력 한계를 넘어, 실제 계약서 파일 기반 분석 가능
 - **개인정보 보호 강화**: 모든 계약서 텍스트는 LLM 입력 전 PII 마스킹 처리
@@ -122,16 +120,19 @@
 ### 2-5. 비즈니스 모델 및 시장 가치
 
 #### 타깃 사용자
+
 - 처음 임대차 계약을 앞둔 **사회초년생·청년층 (20~30대)**
 - 재계약 또는 특약 검토가 필요한 **임차인**
 - 법률 자문 비용을 절감하고 싶은 **일반 세입자**
 
 #### 시장 적합성
+
 - 연간 전월세 거래량 약 **200만 건 이상** (국토교통부 실거래가 기준)
 - 전세사기 피해 예방에 대한 **사회적 수요 급증**
 - 기존 서비스 대비 차별점: **계약서 파일 기반 조항별 분석 + 법령 근거 제시**
 
 #### 수익 모델 (확장 방향)
+
 - 무료 기본 서비스 + **프리미엄 구독** (심층 분석, 검토 리포트 PDF 다운로드)
 - 법률 자문이 필요한 사용자에게 **외부 전문가 플랫폼 연계 링크** 제공 (제휴 수익)
 - **공인중개사·부동산 플랫폼과의 B2B 제휴** (계약서 검토 기능 임베드)
@@ -139,32 +140,32 @@
 
 ---
 
-## 3. 3차 → 4차 변경 사항 ⭐ 
+## 3. 3차 → 4차 변경 사항 ⭐
 
 > 본 프로젝트는 [SKN24 3차 단위 프로젝트](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN24-3rd-6Team)의 연장선상에서 진행되었습니다. 3차 단위에서 LLM RAG 기반 챗봇 MVP를 구현한 데 이어, 4차 단위에서는 **실제 사용자가 사용 가능한 웹 서비스 형태**로 확장 개발하였습니다.
 
 ### 3-1. 핵심 변경 요약
 
-| 구분 | 3차 단위 (Streamlit MVP) | 4차 단위 (웹 서비스 확장) |
-|---|---|---|
-| **UI / 프론트엔드** | Streamlit 단일 페이지 | Django Template (랜딩/마이페이지 등) + HTML/CSS/JS |
-| **백엔드 구조** | Streamlit 단일 프로세스 | **Django (HTML/인증) + FastAPI (AI 추론) 분리 아키텍처** |
-| **회원 시스템** | 없음 | **이메일 인증 + 회원가입 + 로그인 + 마이페이지** |
-| **계약서 입력 방식** | 텍스트 직접 입력만 가능 | **PDF 업로드 + OCR 텍스트 추출** |
-| **개인정보 보호** | 정규식 PII 감지 (입력 차단) | 정규식 PII 감지 + **OCR 결과 자동 마스킹** |
-| **데이터 저장** | 메모리 / 로컬 | **PostgreSQL (사용자/대화 이력) + Qdrant (벡터)** |
-| **배포 환경** | 로컬 실행 (Streamlit run) | **AWS EC2 + Docker + Nginx (Reverse Proxy + SSL)** |
-| **세션 / 대화 관리** | 단일 세션 | 사용자별 채팅방 최대 10개 + 멀티턴 유지 |
+| 구분                 | 3차 단위 (Streamlit MVP)    | 4차 단위 (웹 서비스 확장)                                |
+| -------------------- | --------------------------- | -------------------------------------------------------- |
+| **UI / 프론트엔드**  | Streamlit 단일 페이지       | Django Template (랜딩/마이페이지 등) + HTML/CSS/JS       |
+| **백엔드 구조**      | Streamlit 단일 프로세스     | **Django (HTML/인증) + FastAPI (AI 추론) 분리 아키텍처** |
+| **회원 시스템**      | 없음                        | **이메일 인증 + 회원가입 + 로그인 + 마이페이지**         |
+| **계약서 입력 방식** | 텍스트 직접 입력만 가능     | **PDF 업로드 + OCR 텍스트 추출**                         |
+| **개인정보 보호**    | 정규식 PII 감지 (입력 차단) | 정규식 PII 감지 + **OCR 결과 자동 마스킹**               |
+| **데이터 저장**      | 메모리 / 로컬               | **PostgreSQL (사용자/대화 이력) + Qdrant (벡터)**        |
+| **배포 환경**        | 로컬 실행 (Streamlit run)   | **AWS EC2 + Docker + Nginx (Reverse Proxy + SSL)**       |
+| **세션 / 대화 관리** | 단일 세션                   | 사용자별 채팅방 최대 10개 + 멀티턴 유지                  |
 
 ### 3-2. 모델 변경 이력 및 선택 근거
 
 3차 → 4차로 넘어오면서 LLM 선정 과정을 다시 검토하였습니다.
 
-| 시점 | 모델 | 선택/배제 사유 |
-|---|---|---|
-| 3차 단위 초기 | EXAONE-3.5-7.8B-Instruct | 한국어 성능 + 오픈소스 + 보안(로컬 추론) 측면 우위 |
-| 3차 단위 중반 | gpt-4o-mini로 전환 | OCR/PDF 미구현 단계에서 빠른 응답·안정성 확보 우선 |
-| **4차 단위** | **EXAONE 재채택 (vLLM 기반 OpenAI 호환 엔드포인트)** | OCR 도입으로 보안 민감도 증가 → **자체 추론 환경 필요**, 한국어 법률 도메인 성능 우위 |
+| 시점          | 모델                                                 | 선택/배제 사유                                                                        |
+| ------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 3차 단위 초기 | EXAONE-3.5-7.8B-Instruct                             | 한국어 성능 + 오픈소스 + 보안(로컬 추론) 측면 우위                                    |
+| 3차 단위 중반 | gpt-4o-mini로 전환                                   | OCR/PDF 미구현 단계에서 빠른 응답·안정성 확보 우선                                    |
+| **4차 단위**  | **EXAONE 재채택 (vLLM 기반 OpenAI 호환 엔드포인트)** | OCR 도입으로 보안 민감도 증가 → **자체 추론 환경 필요**, 한국어 법률 도메인 성능 우위 |
 
 > **선택 근거 요약**:
 >
@@ -195,31 +196,28 @@
 #### 주요 개선 포인트
 
 1. **메타데이터 필터링** — 의도 분류 결과에 따라 법령/판례/해석례 중 관련 카테고리만 검색하여 검색 정밀도와 응답 속도 향상
-2. **유사도 임계치 기반 Fallback** — 임계치 미달 시 임의 답변 생성 대신 *"정확한 답변을 찾지 못했습니다"* 안내로 **할루시네이션 방지**
+2. **유사도 임계치 기반 Fallback** — 임계치 미달 시 임의 답변 생성 대신 _"정확한 답변을 찾지 못했습니다"_ 안내로 **할루시네이션 방지**
 3. **PII 자동 마스킹** — OCR 추출 텍스트에서 이름·주민번호·연락처·상세주소 등을 `*`로 마스킹 후 LLM에 전달
 4. **법령 출처 링크 자동 삽입** — 답변 생성 시 참조한 법령의 국가법령정보센터 링크를 출처로 함께 제공 (사용자가 원본 검증 가능)
 
 ### 3-4. 디버깅 및 성능 최적화 노력 _(작성 예정)_
 
-| 영역 | 문제 | 해결 |
-|---|---|---|
-| 응답 속도 | _(팀원별 작성 예정)_ | _(작성 예정)_ |
-| OCR 정확도 | _(작성 예정)_ | OCR 신뢰도 85% 미만 시 사용자에게 재업로드 안내 |
-| 벡터 검색 품질 | 일부 질문에서 무관한 결과 반환 | 의도 분류 후 메타데이터 필터링 적용 |
-| 세션 관리 | 멀티턴 대화 시 컨텍스트 누락 | LangGraph MemorySaver로 thread_id 기반 세션 분리 |
+| 영역           | 문제                           | 해결                                             |
+| -------------- | ------------------------------ | ------------------------------------------------ |
+| 응답 속도      | _(팀원별 작성 예정)_           | _(작성 예정)_                                    |
+| OCR 정확도     | _(작성 예정)_                  | OCR 신뢰도 85% 미만 시 사용자에게 재업로드 안내  |
+| 벡터 검색 품질 | 일부 질문에서 무관한 결과 반환 | 의도 분류 후 메타데이터 필터링 적용              |
+| 세션 관리      | 멀티턴 대화 시 컨텍스트 누락   | LangGraph MemorySaver로 thread_id 기반 세션 분리 |
 
 > 💡 _세부 디버깅 사례는 발표 시 강조 포인트로 활용 예정_
 
 ---
->
-(이하 Section 4 ~ 14는 추후 작성 — 기술 스택, 시작하기 가이드, WBS, 요구사항, 데이터 처리, DB 연동, 모델 성능, 테스트, 배포, 수행 결과, 회고)
->
+
+> (이하 Section 4 ~ 14는 추후 작성 — 기술 스택, 시작하기 가이드, WBS, 요구사항, 데이터 처리, DB 연동, 모델 성능, 테스트, 배포, 수행 결과, 회고)
+
 ---
 
-## 4. 기술 스택 
-
-
-
+## 4. 기술 스택
 
 ---
 
@@ -232,174 +230,77 @@
 ---
 
 ## 7. 화면설계서 (screenshot)
+<details>
+<summary><b>홈화면</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 로그인 | ![로그인](static/images/readme/scr-home-001.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-002.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-003.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-004.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-005.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-006.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-007.png) |
+
+
+</details>
+
+<details>
+<summary><b>로그인 / 회원가입</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 로그인 | ![로그인](static/images/readme/scr-user-002.png) |
+| 개인정보 처리방침 | ![개인정보 처리방침](static/images/readme/scr-user-003.png) |
+| 회원가입 | ![회원가입](static/images/readme/scr-user-004.png) |
+| 비밀번호 재설정 | ![비밀번호 재설정](static/images/readme/scr-user-005.png) |
+
+</details>
+
+<details>
+<summary><b>채팅</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 채팅 | ![채팅](static/images/readme/scr-chat-001.png) |
+| 걔약서 업로드 | ![계약서 업로드](static/images/readme/scr-chat-002.png) |
+| 질의응답 | ![질의응답](static/images/readme/scr-chat-003.png) |
+
+</details>
+
+<details>
+<summary><b>내 정보</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 본인 인증 | ![본인 인증](static/images/readme/scr-user-006.png) |
+| 내정보 | ![마이페이지](static/images/readme/scr-user-007.png) |
+
+</details>
 
 ---
 
 ## 8. WBS (screenshot)
 
+---
+
+## 9. 테스트 계획 및 결과 보고서 (screenshot)
+
+## 9-1. 성능최적화 / 개선을 위한 노력
 
 ---
 
-## 9. 테스트 걔획 및 결과 보고서 (screenshot)
-
-## 9-1. 성능최적화 / 개선을 위한 노력 
-
-
----
-
-## 10. 수행결과 (테스트 / 시연페이지) 
-
+## 10. 수행결과 (테스트 / 시연페이지)
 
 ---
 
 ## 한줄 회고
 
-| 이름 | 한 줄 회고 |
-|:------:|:-----------|
-| 임정희 |  |
-| 정석원 |  |
-| 고아라 |  |
-| 김정현 |  |
-| 진세형 |  |
-
-
-===============================================================
-
-
-- uv / pip 셋업
-- 환경 변수
-- 새 앱 추가
-
-## 6. WBS / 요구사항 / 데이터처리 / DB연동 / 모델성능 / 테스트 / 배포 / 수행결과 및 시연 / 회고
-
-Django 6 / Python 3.12. Companion server to the [`aigo-ai`](../aigo-ai) RAG chatbot.
-
----
-
-## 프로젝트 구조
-
-```
-aigo-web/
-  manage.py
-  config/                    # 프로젝트 패키지 (settings/urls/wsgi/asgi)
-    settings/
-      base.py                # 공통 설정 — django-environ으로 .env에서 로드
-      dev.py                 # 개발 (DEBUG=True, manage.py 기본값)
-      prod.py                # 운영 (wsgi/asgi 기본값)
-      test.py                # 테스트 (pytest 기본값)
-    urls.py
-    wsgi.py
-    asgi.py
-  accounts/                  # Custom User (AbstractUser stub) + JWT 엔드포인트
-  health/                    # 예제 앱: GET /healthz
-  chat/                      # Thread/Message + aigo-ai 프록시
-  core/                      # 공유 추상 모델 (TimestampedModel) — INSTALLED_APPS 미등록
-  pyproject.toml             # uv + ruff + pytest 설정
-  uv.lock                    # 의존성 진실 (lockfile)
-  requirements.txt           # uv export 산출물 — pip 사용자 무마찰
-  requirements-dev.txt       # 동일, dev 그룹
-  .env.example               # 환경 변수 템플릿
-```
-
-각 앱은 자기 자신만 책임집니다 (`apps.py`/`models.py`/`urls.py`/`views.py`/`tests/`).
-앱 간 직접 import는 최소화 — 공유 로직은 `core/`에 둡니다.
-
----
-
-## 시작하기
-
-### uv (권장)
-
-```bash
-uv sync                                       # .venv 동기화
-cp .env.example .env.local                    # 환경 변수 채우기
-uv run python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-                                              # → DJANGO_SECRET_KEY 값으로 .env.local에 붙여넣기
-uv run python manage.py migrate
-uv run python manage.py runserver
-uv run pytest                                 # 테스트 (config.settings.test)
-```
-
-### pip (uv 미설치 시)
-
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt -r requirements-dev.txt
-cp .env.example .env.local
-python manage.py migrate
-python manage.py runserver
-pytest
-```
-
-`/healthz`가 `{"status":"ok"}`를 반환하면 부트스트랩 성공입니다.
-
----
-
-## 환경 변수
-
-`.env.example`이 모든 키를 안전한 placeholder로 정의합니다. `.env.local`(개발) 또는 `.env.prod`(운영)으로 복사 후 채우세요. 두 파일 모두 gitignored — 절대 커밋 금지.
-
-| 키 | 용도 | 비고 |
-|---|---|---|
-| `DJANGO_SETTINGS_MODULE` | 설정 모듈 | dev/prod/test |
-| `DJANGO_SECRET_KEY` | Django 시크릿 키 | prod에서 미설정 시 raise |
-| `DJANGO_DEBUG` | 디버그 플래그 | `env.bool` (`True`/`False`) |
-| `DJANGO_ALLOWED_HOSTS` | 허용 호스트 | csv |
-| `DJANGO_CSRF_TRUSTED_ORIGINS` | CSRF 신뢰 오리진 | csv, prod 필수 |
-| `DATABASE_URL` | DB URL | psycopg 3 → `postgresql+psycopg://...` |
-| `DJANGO_JWT_SIGNING_KEY` | JWT 서명 키 | 미설정 시 `DJANGO_SECRET_KEY` 사용 |
-| `AIGO_AI_BASE_URL` | aigo-ai (FastAPI) base URL | 기본 `http://localhost:8000` |
-| `DJANGO_TIME_ZONE` | 타임존 | 기본 `Asia/Seoul` |
-| `DJANGO_LANGUAGE_CODE` | 로케일 | 기본 `ko-kr` |
-
----
-
-## 새 앱 추가
-
-1. 톱레벨 `<name>/` 디렉터리 생성, 다음 파일 추가:
-   - `__init__.py`
-   - `apps.py` — `name = "<name>"` (단일 세그먼트라 `label` 불필요)
-   - `models.py`, `views.py`, `urls.py` (필요한 만큼)
-   - `migrations/__init__.py`
-   - `tests/__init__.py` (필수 — 모듈명 충돌 방지), `tests/test_*.py`
-2. `config/settings/base.py`의 `LOCAL_APPS`에 `"<name>"` 추가
-3. `config/urls.py`에서 라우팅 필요 시 `include("<name>.urls")`
-4. `pyproject.toml`의 `[tool.pytest.ini_options].testpaths`에 `"<name>"` 추가
-5. `uv run python manage.py makemigrations <name>`
-
----
-
-## requirements 재생성 (의존성 변경 시)
-
-`uv.lock`이 진실, `requirements*.txt`는 산출물입니다. `pyproject.toml`에서 의존성을 추가/변경했다면:
-
-```bash
-uv lock                                                              # uv.lock 갱신
-uv export --no-hashes --no-annotate --no-dev -o requirements.txt
-uv export --no-hashes --no-annotate --only-group dev -o requirements-dev.txt
-```
-
-세 파일을 함께 커밋하세요. CI에서 drift 검사를 추가하는 것을 권장합니다.
-
----
-
-## 커맨드 치트시트
-
-| 명령 | uv | pip |
-|---|---|---|
-| 마이그레이션 | `uv run python manage.py migrate` | `python manage.py migrate` |
-| 슈퍼유저 | `uv run python manage.py createsuperuser` | `python manage.py createsuperuser` |
-| 개발 서버 | `uv run python manage.py runserver` | `python manage.py runserver` |
-| 테스트 | `uv run pytest` | `pytest` |
-| 린트 | `uv run ruff check .` | `ruff check .` |
-| 포맷 | `uv run ruff format .` | `ruff format .` |
-| 운영 체크 | `DJANGO_SETTINGS_MODULE=config.settings.prod uv run python manage.py check --deploy` | 동일 (uv 제외) |
-
----
-
-## 컨벤션
-
-- **들여쓰기 2칸** (sibling `aigo-ai/`와 동일). Ruff `indent-width=2`로 강제.
-- **커밋 메시지**: `<type>: <설명>` (영문 type, 한국어 설명). 타입: `feat | fix | docs | refactor | chore | style | perf | ci`.
-- **`.env.local` / `.env.prod` 절대 커밋 금지.** 새 env 키 추가 시 같은 커밋에 `.env.example`도 갱신.
+|  이름  | 한 줄 회고 |
+| :----: | :--------- |
+| 임정희 |            |
+| 정석원 |            |
+| 고아라 |            |
+| 김정현 |            |
+| 진세형 |            |

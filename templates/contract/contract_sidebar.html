@@ -3,6 +3,22 @@
 <!-- 계약서 우측 사이드바 -->
 <div class="contract-sidebar collapsed" id="contractSidebar">
 
+  <!-- 책갈피 탭 버튼 (접힌 상태에서 튀어나옴) -->
+  <button class="sidebar-tab" id="sidebarTab" onclick="openSidebar()" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <path d="M14 2v6h6"/>
+    </svg>
+  </button>
+
+  <!-- X 닫기 버튼 (펼친 상태에서 표시) -->
+  <button class="sidebar-close" id="sidebarClose" onclick="closeSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+
   <!-- 계약서 없을 때 -->
   <div class="sidebar-empty" id="sidebarEmpty">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -28,6 +44,7 @@
           </svg>
         </div>
         <span class="contract-file-name" id="contractFileName">-</span>
+        <span class="contract-file-size" id="contractFileSize"></span>
       </div>
     </section>
 
@@ -40,59 +57,35 @@
         <button class="btn-edit" id="propertyEditBtn" onclick="togglePropertyEdit()">수정</button>
       </div>
 
-      <!-- 조회 모드 -->
-      <div class="info-list" id="propertyView">
+      <form class="info-box" id="propertyForm" onsubmit="savePropertyInfo(event)">
         <div class="info-row">
           <span class="info-label">소재지</span>
           <span class="info-value" id="viewLocation">-</span>
+          <input class="info-input hidden" type="text" id="editLocation" placeholder="소재지 입력">
         </div>
         <div class="info-row">
           <span class="info-label">임대차 기간</span>
           <span class="info-value" id="viewPeriod">-</span>
+          <div class="info-input-dates hidden" id="editPeriodWrap">
+            <input class="info-input" type="date" id="editStartDate">
+            <span class="info-input-sep">~</span>
+            <input class="info-input" type="date" id="editEndDate">
+          </div>
         </div>
         <div class="info-row">
           <span class="info-label">보증금</span>
           <span class="info-value" id="viewDeposit">-</span>
+          <input class="info-input hidden" type="number" id="editDeposit" placeholder="0">
         </div>
         <div class="info-row">
           <span class="info-label">월세</span>
           <span class="info-value" id="viewMonthRent">-</span>
+          <input class="info-input hidden" type="number" id="editMonthRent" placeholder="0">
         </div>
         <div class="info-row">
           <span class="info-label">관리비</span>
           <span class="info-value" id="viewHouseCost">-</span>
-        </div>
-      </div>
-
-      <!-- 수정 모드 -->
-      <form class="edit-form hidden" id="propertyEditForm" onsubmit="savePropertyInfo(event)">
-        <div class="form-row">
-          <label class="form-label">소재지</label>
-          <input class="form-input" type="text" id="editLocation" placeholder="소재지 입력">
-        </div>
-        <div class="form-row">
-          <label class="form-label">임대차 시작일</label>
-          <input class="form-input" type="date" id="editStartDate">
-        </div>
-        <div class="form-row">
-          <label class="form-label">임대차 종료일</label>
-          <input class="form-input" type="date" id="editEndDate">
-        </div>
-        <div class="form-row">
-          <label class="form-label">보증금 (만원)</label>
-          <input class="form-input" type="number" id="editDeposit" placeholder="0">
-        </div>
-        <div class="form-row">
-          <label class="form-label">월세 (만원)</label>
-          <input class="form-input" type="number" id="editMonthRent" placeholder="0">
-        </div>
-        <div class="form-row">
-          <label class="form-label">관리비</label>
-          <input class="form-input" type="text" id="editHouseCost" placeholder="관리비 입력">
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-form-cancel" onclick="cancelPropertyEdit()">취소</button>
-          <button type="submit" class="btn-form-save">저장</button>
+          <input class="info-input hidden" type="text" id="editHouseCost" placeholder="관리비 입력">
         </div>
       </form>
     </section>
@@ -106,24 +99,9 @@
         <button class="btn-edit" id="specialEditBtn" onclick="toggleSpecialEdit()">수정</button>
       </div>
 
-      <!-- 조회 모드 -->
-      <div id="specialView">
-        <p class="special-text" id="viewSpecialTerms">-</p>
+      <div class="special-box">
+        <p class="special-text" id="viewSpecialTerms" placeholder="특약 내용을 입력하세요"></p>
       </div>
-
-      <!-- 수정 모드 -->
-      <form class="edit-form hidden" id="specialEditForm" onsubmit="saveSpecialTerms(event)">
-        <textarea
-          class="form-textarea"
-          id="editSpecialTerms"
-          placeholder="특약 내용을 입력하세요"
-          rows="6"
-        ></textarea>
-        <div class="form-actions">
-          <button type="button" class="btn-form-cancel" onclick="cancelSpecialEdit()">취소</button>
-          <button type="submit" class="btn-form-save">저장</button>
-        </div>
-      </form>
     </section>
 
   </div>

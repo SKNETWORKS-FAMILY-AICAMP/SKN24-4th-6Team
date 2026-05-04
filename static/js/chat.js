@@ -50,6 +50,12 @@ async function apiFetch(url, options = {}) {
     ...options,
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  // 응답이 비어있으면 null 반환 (DELETE 요청의 경우)
+  if (res.status === 204 || res.headers.get('content-length') === '0') {
+    return null;
+  }
+
   return res.json();
 }
 
@@ -127,6 +133,18 @@ async function createChatroom() {
 }
 
 /* ───────────────────────────────
+   채팅방 수 실시간 업데이트
+   - 대화 (n/10)에서 n
+─────────────────────────────── */
+function updateChatroomCount() {
+  const count = getChatroomCount();
+  const countElement = document.querySelector(".sidebar__section-title");
+  if (countElement) {
+    countElement.textContent = `대화 (${count}/10)`;
+  }
+}
+
+/* ───────────────────────────────
    사이드바에 채팅방 항목 추가
 ─────────────────────────────── */
 function addChatroomToSidebar(id, title) {
@@ -142,7 +160,10 @@ function addChatroomToSidebar(id, title) {
     <div class="chatroom-item__menu-wrapper">
       <button class="chatroom-item__menu" data-id="${id}">···</button>
       <div class="chatroom-item__dropdown" data-id="${id}">
-        <button class="chatroom-item__delete-btn">삭제하기</button>
+        <button class="chatroom-item__delete-btn">
+          <img src="/static/images/icons/delete.svg" alt="삭제">
+          삭제하기
+        </button>
       </div>
     </div>
   `;
@@ -169,6 +190,7 @@ function addChatroomToSidebar(id, title) {
   });
   
   chatroomList.prepend(li);
+  updateChatroomCount();
 }
 
 /* ───────────────────────────────
@@ -230,7 +252,7 @@ function showMessagesArea() {
 }
 
 /* ───────────────────────────────
-   메시지 렌더링
+   메시지 렌더링 
 ─────────────────────────────── */
 function appendMessage(role, content) {
   const div = document.createElement("div");
@@ -238,7 +260,7 @@ function appendMessage(role, content) {
 
   if (role === "assistant") {
     div.innerHTML = `
-      <img class="message__avatar" src="/static/images/logo.png" alt="아이고 청년">
+      <img class="message__avatar" src="/static/img/sub_img.svg" alt="아이고 청년">
       <div class="message__bubble">${escapeHtml(content)}</div>
     `;
   } else {
@@ -257,7 +279,7 @@ function showLoadingBubble() {
   div.className = "message message--assistant";
   div.id = "loadingBubble";
   div.innerHTML = `
-    <img class="message__avatar" src="/static/images/logo.png" alt="아이고 청년">
+    <img class="message__avatar" src="/static/img/sub_img.svg" alt="아이고 청년">
     <div class="message__bubble message__bubble--loading">
       <span></span><span></span><span></span>
     </div>
@@ -411,7 +433,7 @@ function appendAssistantStreamingBubble() {
   const div = document.createElement("div");
   div.className = "message message--assistant";
   div.innerHTML = `
-    <img class="message__avatar" src="/static/images/logo.png" alt="아이고 청년">
+    <img class="message__avatar" src="/static/img/sub_img.svg" alt="아이고 청년">
     <div class="message__bubble"></div>
   `;
   chatMessages.appendChild(div);
@@ -456,6 +478,7 @@ async function deleteChatroom() {
 
     const item = chatroomList.querySelector(`.chatroom-item[data-id="${pendingDeleteId}"]`);
     if (item) item.remove();
+    updateChatroomCount();
 
     if (currentChatroomId === pendingDeleteId) {
       resetToWelcome();
@@ -594,7 +617,15 @@ modalLogoutCancel.addEventListener("click", () => {
 
 // 좌측 사이드바 토글
 const sidebar = document.querySelector(".sidebar");
+const toggleIcon = document.getElementById("toggleIcon");
 
 btnToggleSidebar.addEventListener("click", () => {
   sidebar.classList.toggle("sidebar--hidden");
+
+  // 아이콘 변경
+  if (sidebar.classList.contains("sidebar--hidden")) {
+    toggleIcon.src = "/static/images/icons/open.svg";
+  } else {
+    toggleIcon.src = "/static/images/icons/close.svg";
+  }
 });
