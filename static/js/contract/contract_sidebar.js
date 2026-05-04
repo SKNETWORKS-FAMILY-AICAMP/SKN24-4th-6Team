@@ -184,36 +184,41 @@ async function savePropertyInfo(e) {
 // ── 특약 정보 수정 ──
 function toggleSpecialEdit() {
   const btn = document.getElementById('specialEditBtn');
+  const el = document.getElementById('viewSpecialTerms');
   const isEditing = btn.textContent === '저장';
 
   if (isEditing) {
-    document.getElementById('specialForm').requestSubmit();
+    saveSpecialTerms();
     return;
   }
 
-  // 수정 모드 진입
-  const text = document.getElementById('viewSpecialTerms');
-  const textarea = document.getElementById('editSpecialTerms');
-  textarea.value = text.textContent === '-' ? '' : text.textContent;
-  text.classList.add('hidden');
-  textarea.classList.remove('hidden');
-  textarea.focus();
+  // 수정 모드 진입: contenteditable 활성화
+  if (el.textContent === '-') el.textContent = '';
+  el.contentEditable = 'true';
+  el.focus();
+  // 커서를 텍스트 끝으로 이동
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
   btn.textContent = '저장';
 }
 
 function cancelSpecialEdit() {
-  document.getElementById('viewSpecialTerms').classList.remove('hidden');
-  document.getElementById('editSpecialTerms').classList.add('hidden');
+  const el = document.getElementById('viewSpecialTerms');
+  el.contentEditable = 'false';
+  if (!el.textContent.trim()) el.textContent = '-';
   document.getElementById('specialEditBtn').textContent = '수정';
 }
 
-async function saveSpecialTerms(e) {
-  e.preventDefault();
+async function saveSpecialTerms() {
   const chatroomId = getChatroomId();
+  const el = document.getElementById('viewSpecialTerms');
+  const content = el.textContent.trim();
 
-  const body = new URLSearchParams({
-    content: document.getElementById('editSpecialTerms').value,
-  });
+  const body = new URLSearchParams({ content });
 
   try {
     const response = await fetch(`/contract/${chatroomId}/terms/`, {
