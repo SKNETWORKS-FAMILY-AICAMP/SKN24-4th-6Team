@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('chat', '0003_remove_thread_user_chatroom_chat_delete_message_and_more'),
+        ('chat', '0001_initial'),
     ]
 
     operations = [
