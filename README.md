@@ -227,6 +227,14 @@
 
 ## 6. 요구사항 정의서 (screenshot)
 
+**원본 문서**: [요구사항 정의서](https://docs.google.com/spreadsheets/d/176S-cVx3UwQ9UyDsD8jqfMLIKUZKwHa-qjpCTMTjpYc/edit?gid=0#gid=0)
+
+| 구분 | 스크린샷 |
+| --- | --- |
+| 사용자 | ![사용자](static/images/readme/req_user.png) |
+| 채팅 | ![채팅](static/images/readme/req_chat.png) |
+| 개인정보 | ![개인정보](static/images/readme/req_priv.png) |
+
 ---
 
 ## 7. 화면설계서 (screenshot)
