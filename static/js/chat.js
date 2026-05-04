@@ -259,16 +259,44 @@ function appendMessage(role, content) {
   div.className = `message message--${role}`;
 
   if (role === "assistant") {
+    // DB 저장본은 본문 + '---\n**관련 법령/판례:**\n- [title](url)...' 꼬리가
+    // 한 덩어리로 들어 있을 수 있으므로, 본문/출처를 다시 분리해서 표시
+    const bodyText = stripReferenceTail(content || "");
+    const citations = extractCitationsFromTail(content || "");
+
     div.innerHTML = `
       <img class="message__avatar" src="/static/img/sub_img.svg" alt="아이고 청년">
-      <div class="message__bubble">${escapeHtml(content)}</div>
+      <div class="message__bubble">
+        <div class="message__body">${renderMarkdownLite(bodyText)}</div>
+        <div class="message__citations" hidden></div>
+      </div>
     `;
+    const citationsEl = div.querySelector(".message__citations");
+    renderCitations(citationsEl, citations);
   } else {
     div.innerHTML = `<div class="message__bubble">${escapeHtml(content)}</div>`;
   }
 
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+/* ───────────────────────────────
+   저장된 본문에서 '관련 법령/판례:' 꼬리 부분의
+   '- [title](url)' 항목들을 citation 배열로 추출
+─────────────────────────────── */
+function extractCitationsFromTail(content) {
+  const m = content.match(REFERENCE_TAIL_RE);
+  if (!m) return [];
+  const tail = m[0];
+  const out = [];
+  // - [type] title (url)  또는  - [title](url)  형태 둘 다 대응
+  const linkRe = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
+  let lm;
+  while ((lm = linkRe.exec(tail)) !== null) {
+    out.push({ doc_type: "참고", title: lm[1], url: lm[2] });
+  }
+  return out;
 }
 
 /* ───────────────────────────────
@@ -330,9 +358,10 @@ async function sendMessage() {
   appendMessage("user", content);
   showLoadingBubble();
 
-  let assistantBubble = null;
-  let assistantText = "";
-  let errored = false;
+  let assistantNodes = null;       // { bodyEl, citationsEl } - 본문/출처 두 영역 핸들
+  let rawText        = "";          // token 누적 (분리 전 원본)
+  let citations      = [];          // citation 이벤트 누적
+  let errored        = false;
 
   try {
     const res = await fetch(`/api/v1/chatrooms/${currentChatroomId}/messages`, {
@@ -351,14 +380,28 @@ async function sendMessage() {
 
     await consumeSse(res.body, (event, data) => {
       if (event === "token") {
-        if (!assistantBubble) {
+        if (!assistantNodes) {
           removeLoadingBubble();
-          assistantBubble = appendAssistantStreamingBubble();
+          assistantNodes = appendAssistantStreamingBubble();
         }
         const delta = (data && data.delta) || "";
-        assistantText += delta;
-        assistantBubble.textContent = assistantText;
+        rawText += delta;
+
+        // 마지막 token에 들어오는 '관련 법령/판례:' 마크다운 블록은 본문에서 잘라냄
+        // (같은 정보가 citation 이벤트로도 따로 오므로 카드 영역에서만 표출)
+        const bodyText = stripReferenceTail(rawText);
+        assistantNodes.bodyEl.innerHTML = renderMarkdownLite(bodyText);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+      } else if (event === "citation") {
+        if (!assistantNodes) {
+          removeLoadingBubble();
+          assistantNodes = appendAssistantStreamingBubble();
+        }
+        if (data && (data.title || data.url)) {
+          citations.push(data);
+          renderCitations(assistantNodes.citationsEl, citations);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
       } else if (event === "error") {
         errored = true;
       }
@@ -366,8 +409,8 @@ async function sendMessage() {
 
     if (errored) {
       removeLoadingBubble();
-      if (assistantBubble) {
-        assistantBubble.textContent = "죄송합니다. AI 서버 응답을 받지 못했습니다.";
+      if (assistantNodes) {
+        assistantNodes.bodyEl.textContent = "죄송합니다. AI 서버 응답을 받지 못했습니다.";
       } else {
         appendMessage("assistant", "죄송합니다. AI 서버 응답을 받지 못했습니다.");
       }
@@ -428,17 +471,101 @@ function parseSseFrame(frame) {
 
 /* ───────────────────────────────
    스트리밍용 어시스턴트 버블
+   - 본문(.message__body) + 출처카드(.message__citations) 두 영역으로 분리
 ─────────────────────────────── */
 function appendAssistantStreamingBubble() {
   const div = document.createElement("div");
   div.className = "message message--assistant";
   div.innerHTML = `
     <img class="message__avatar" src="/static/img/sub_img.svg" alt="아이고 청년">
-    <div class="message__bubble"></div>
+    <div class="message__bubble">
+      <div class="message__body"></div>
+      <div class="message__citations" hidden></div>
+    </div>
   `;
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
-  return div.querySelector(".message__bubble");
+  return {
+    bodyEl: div.querySelector(".message__body"),
+    citationsEl: div.querySelector(".message__citations"),
+  };
+}
+
+/* ───────────────────────────────
+   참고자료 꼬리 제거
+   - 마지막 token에 한 덩어리로 오는
+     '\n\n---\n**관련 법령/판례:**\n- [...]...' 블록을 잘라냄
+   - 같은 정보가 citation 이벤트로도 따로 오므로 본문에서는 제거
+─────────────────────────────── */
+const REFERENCE_TAIL_RE = /\n+-{3,}\s*\n\s*\*\*\s*관련\s*법령\s*\/\s*판례\s*[:：]?\s*\*\*[\s\S]*$/;
+
+function stripReferenceTail(text) {
+  return text.replace(REFERENCE_TAIL_RE, "").trimEnd();
+}
+
+/* ───────────────────────────────
+   가벼운 마크다운 변환
+   - **굵게** → <strong>, 줄바꿈 → <br> 만 처리
+   - 그 외에는 escapeHtml 로 안전하게 출력
+─────────────────────────────── */
+function renderMarkdownLite(text) {
+  if (!text) return "";
+  const escaped = escapeHtml(text);
+  return escaped
+    .replace(/\*\*([^*\n]+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\n/g, "<br>");
+}
+
+/* ───────────────────────────────
+   인용(출처) 카드 렌더링
+─────────────────────────────── */
+function renderCitations(containerEl, citations) {
+  if (!citations || citations.length === 0) {
+    containerEl.hidden = true;
+    containerEl.innerHTML = "";
+    return;
+  }
+
+  const items = citations.map((c, idx) => {
+    const num   = idx + 1;
+    const type  = escapeHtml(c.doc_type || "참고");
+    const title = escapeHtml(c.title || c.url || "출처");
+    const url   = c.url || "#";
+    const detail = c.detail ? `<span class="citation__detail">${escapeHtml(c.detail)}</span>` : "";
+
+    if (url && url !== "#") {
+      return `
+        <li class="citation">
+          <span class="citation__num">${num}</span>
+          <span class="citation__type">${type}</span>
+          <a class="citation__title" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${title}</a>
+          ${detail}
+        </li>`;
+    }
+    return `
+      <li class="citation">
+        <span class="citation__num">${num}</span>
+        <span class="citation__type">${type}</span>
+        <span class="citation__title">${title}</span>
+        ${detail}
+      </li>`;
+  }).join("");
+
+  containerEl.innerHTML = `
+    <div class="citations__header">출처 · ${citations.length}건</div>
+    <ol class="citations__list">${items}</ol>
+  `;
+  containerEl.hidden = false;
+}
+
+/* href/속성용 escape (인용 url 보호) */
+function escapeAttr(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 /* ───────────────────────────────
