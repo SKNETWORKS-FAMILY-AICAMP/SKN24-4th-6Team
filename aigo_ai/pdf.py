@@ -15,10 +15,12 @@ def analyze_pdf(
   file_bytes: bytes,
   user_id: str,
   chatroom_id: str | None = None,
-  timeout: float = 60.0,
+  timeout: float | None = None,
 ) -> dict[str, Any]:
   """
   PDF 파일을 aigo-ai /pdf/analyze 엔드포인트로 전송하여 분석 결과를 JSON으로 반환
+
+  timeout 미지정 시 settings.AIGO_AI_REQUEST_TIMEOUT 사용 (client._timeout 기본값)
   """
   try:
     response = client.post_multipart(

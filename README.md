@@ -218,18 +218,85 @@
 ---
 
 ## 4. 기술 스택
+| 분류 | 사용 |
+| --- | --- |
+| 언어 | Python, JS |
+| 웹 | Django, DRF, FastAPI | 
+| RDB | PostgreSQL | 
+| VectorDB | Qdrant |
+| LLM | LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct |
+| Embedding | Kure-v1 |
+| OCR | PaddleOCR | 
+| 인프라/배포 | AWS EC2, Runpod, Docker, NGINX, GUNICORN |
+| 개발 도구 | Github Actions, Ruff, pytest |
 
 ---
 
-## 5. 시스템 구성도 (시스템 아키텍처) & 설계의 특수성 여부
+## 5. 시스템 구성도 (시스템 아키텍처)
 
 ---
 
 ## 6. 요구사항 정의서 (screenshot)
 
+**원본 문서**: [요구사항 정의서](https://docs.google.com/spreadsheets/d/176S-cVx3UwQ9UyDsD8jqfMLIKUZKwHa-qjpCTMTjpYc/edit?gid=0#gid=0)
+
+| 구분 | 스크린샷 |
+| --- | --- |
+| 사용자 | ![사용자](static/images/readme/req_user.png) |
+| 채팅 | ![채팅](static/images/readme/req_chat.png) |
+| 개인정보 | ![개인정보](static/images/readme/req_priv.png) |
+
 ---
 
 ## 7. 화면설계서 (screenshot)
+<details>
+<summary><b>홈화면</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 로그인 | ![로그인](static/images/readme/scr-home-001.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-002.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-003.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-004.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-005.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-006.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-007.png) |
+
+
+</details>
+
+<details>
+<summary><b>로그인 / 회원가입</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 로그인 | ![로그인](static/images/readme/scr-user-002.png) |
+| 개인정보 처리방침 | ![개인정보 처리방침](static/images/readme/scr-user-003.png) |
+| 회원가입 | ![회원가입](static/images/readme/scr-user-004.png) |
+| 비밀번호 재설정 | ![비밀번호 재설정](static/images/readme/scr-user-005.png) |
+
+</details>
+
+<details>
+<summary><b>채팅</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 채팅 | ![채팅](static/images/readme/scr-chat-001.png) |
+| 걔약서 업로드 | ![계약서 업로드](static/images/readme/scr-chat-002.png) |
+| 질의응답 | ![질의응답](static/images/readme/scr-chat-003.png) |
+
+</details>
+
+<details>
+<summary><b>내 정보</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 본인 인증 | ![본인 인증](static/images/readme/scr-user-006.png) |
+| 내정보 | ![마이페이지](static/images/readme/scr-user-007.png) |
+
+</details>
 
 ---
 
@@ -237,7 +304,7 @@
 
 ---
 
-## 9. 테스트 걔획 및 결과 보고서 (screenshot)
+## 9. 테스트 계획 및 결과 보고서 (screenshot)
 
 ## 9-1. 성능최적화 / 개선을 위한 노력
 
