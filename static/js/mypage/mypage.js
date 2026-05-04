@@ -51,9 +51,9 @@ const btnWithdrawCancel = document.getElementById("btnWithdrawCancel");
 /* ══════════════════════════════
    모달 내용 초기화
 ══════════════════════════════ */
-function showModal(el) { el.classList.add("modal-overlay--visible"); }
+function showModal(el) { el.classList.add("active"); }
 function hideModal(el) {
-  el.classList.remove("modal-overlay--visible");
+  el.classList.remove("active");
   el.querySelectorAll("input:not([disabled])").forEach(i => i.value = "");
   el.querySelectorAll(".mypage-error").forEach(e => e.textContent = "");
 }
