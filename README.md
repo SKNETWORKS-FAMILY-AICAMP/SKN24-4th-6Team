@@ -230,6 +230,54 @@
 ---
 
 ## 7. 화면설계서 (screenshot)
+<details>
+<summary><b>홈화면</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 로그인 | ![로그인](static/images/readme/scr-home-001.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-002.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-003.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-004.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-005.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-006.png) |
+| 로그인 | ![로그인](static/images/readme/scr-home-007.png) |
+
+
+</details>
+
+<details>
+<summary><b>로그인 / 회원가입</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 로그인 | ![로그인](static/images/readme/scr-user-002.png) |
+| 개인정보 처리방침 | ![개인정보 처리방침](static/images/readme/scr-user-003.png) |
+| 회원가입 | ![회원가입](static/images/readme/scr-user-004.png) |
+| 비밀번호 재설정 | ![비밀번호 재설정](static/images/readme/scr-user-005.png) |
+
+</details>
+
+<details>
+<summary><b>채팅</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 채팅 | ![채팅](static/images/readme/scr-chat-001.png) |
+| 걔약서 업로드 | ![계약서 업로드](static/images/readme/scr-chat-002.png) |
+| 질의응답 | ![질의응답](static/images/readme/scr-chat-003.png) |
+
+</details>
+
+<details>
+<summary><b>내 정보</b></summary>
+
+| 화면 | 미리보기 |
+| --- | --- |
+| 본인 인증 | ![본인 인증](static/images/readme/scr-user-006.png) |
+| 내정보 | ![마이페이지](static/images/readme/scr-user-007.png) |
+
+</details>
 
 ---
 
@@ -237,7 +285,7 @@
 
 ---
 
-## 9. 테스트 걔획 및 결과 보고서 (screenshot)
+## 9. 테스트 계획 및 결과 보고서 (screenshot)
 
 ## 9-1. 성능최적화 / 개선을 위한 노력
 
