@@ -149,6 +149,8 @@
 
 ## 5. 시스템 구성도 (시스템 아키텍처)
 
+![아키텍처](static/images/readme/architecture.png)
+
 ---
 
 ## 6. 요구사항 정의서 (screenshot)
