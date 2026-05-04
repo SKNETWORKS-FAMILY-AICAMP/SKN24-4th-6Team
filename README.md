@@ -218,14 +218,33 @@
 ---
 
 ## 4. 기술 스택
+| 분류 | 사용 |
+| --- | --- |
+| 언어 | Python, JS |
+| 웹 | Django, DRF, FastAPI | 
+| RDB | PostgreSQL | 
+| VectorDB | Qdrant |
+| LLM | LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct |
+| Embedding | Kure-v1 |
+| OCR | PaddleOCR | 
+| 인프라/배포 | AWS EC2, Runpod, Docker, NGINX, GUNICORN |
+| 개발 도구 | Github Actions, Ruff, pytest |
 
 ---
 
-## 5. 시스템 구성도 (시스템 아키텍처) & 설계의 특수성 여부
+## 5. 시스템 구성도 (시스템 아키텍처)
 
 ---
 
 ## 6. 요구사항 정의서 (screenshot)
+
+**원본 문서**: [요구사항 정의서](https://docs.google.com/spreadsheets/d/176S-cVx3UwQ9UyDsD8jqfMLIKUZKwHa-qjpCTMTjpYc/edit?gid=0#gid=0)
+
+| 구분 | 스크린샷 |
+| --- | --- |
+| 사용자 | ![사용자](static/images/readme/req_user.png) |
+| 채팅 | ![채팅](static/images/readme/req_chat.png) |
+| 개인정보 | ![개인정보](static/images/readme/req_priv.png) |
 
 ---
 
