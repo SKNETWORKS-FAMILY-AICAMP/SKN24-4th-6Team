@@ -40,8 +40,6 @@ def upload_contract(request, chatroom_id):
       chatroom_id=str(chatroom_id),
     )
   except AigoAIError as exc:
-    logger.warning("aigo-ai pdf/analyze 실패: %s", exc)
-    # OCR 실패는 422, 나머지는 502
     exc_str = str(exc)
     if "401" in exc_str:
       status = 401
@@ -51,6 +49,12 @@ def upload_contract(request, chatroom_id):
       status = 503
     else:
       status = 502
+    logger.warning(
+      "aigo-ai pdf/analyze 실패 (status=%s, kind=%s): %s",
+      status,
+      "transport_or_unknown" if status == 502 else "http_error",
+      exc_str,
+    )
     return JsonResponse({"success": False, "message": "AI 서버 오류"}, status=status)
   except Exception as exc:
     logger.exception("upload_contract 예외: %s", exc)

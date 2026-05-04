@@ -34,7 +34,7 @@ def _timeout(read: float | None = None) -> httpx.Timeout:
   return httpx.Timeout(
     connect=10.0,
     read=read if read is not None else settings.AIGO_AI_REQUEST_TIMEOUT,
-    write=10.0,
+    write=30.0,
     pool=10.0,
   )
 
