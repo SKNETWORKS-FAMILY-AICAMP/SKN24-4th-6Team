@@ -172,7 +172,7 @@ body {
 .sidebar__user-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 8px;
   background-color: var(--color-accent);
   color: var(--color-white);
   font-size: 13px;
@@ -404,6 +404,7 @@ body {
   cursor: pointer;
   color: var(--color-fg-muted);
   padding: 4px;
+  margin-bottom: 4px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -423,7 +424,7 @@ body {
   background: none;
   resize: none;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 2.4;
   color: var(--color-fg);
   outline: none;
   max-height: 160px;
