@@ -25,7 +25,7 @@
       </div>
 
       <div class="sidebar__section">
-        <p class="sidebar__section-title">대화 ({{ chatroom_count }}/10)</p>
+        <p class="sidebar__section-title">최신 대화 ({{ chatroom_count }}/10)</p>
         <ul class="chatroom-list" id="chatroomList">
           {% for chatroom in chatrooms %}
           <li class="chatroom-item {% if chatroom.chatroom_id == current_chatroom_id %}chatroom-item--active{% endif %}"

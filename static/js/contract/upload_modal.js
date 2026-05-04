@@ -187,6 +187,7 @@ function setStep3Done() {
 function showState(state) {
   const notice = document.querySelector('.upload-notice');
   const footer = document.getElementById('modalFooter');
+  const title  = document.querySelector('.modal-title');
 
   // 모두 초기화
   dropzone.style.display = 'none';
@@ -195,16 +196,17 @@ function showState(state) {
   analyzing.classList.remove('show');
   notice.style.display = 'none';
   footer.style.display = 'none';
+  title.style.display  = 'none';
 
   if (state === 'dropzone') {
     dropzone.style.display = '';
-    notice.style.display = '';
-    footer.style.display = '';
+    notice.style.display   = '';
+    footer.style.display   = '';
+    title.style.display    = '';
   } else if (state === 'uploadProgress') {
     uploadProgress.classList.add('show');
   } else if (state === 'sizeError') {
     sizeError.classList.add('show');
-    // 푸터, 안내문구 모두 숨김 → "다시 선택" 버튼만 표시
   } else if (state === 'analyzing') {
     analyzing.classList.add('show');
   }
