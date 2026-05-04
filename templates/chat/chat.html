@@ -7,6 +7,7 @@
   <title>아이고 청년</title>
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
   <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+  <link rel="stylesheet" href="{% static 'css/accounts/modal.css' %}"> 
 </head>
 <body>
   <div class="layout">
@@ -106,7 +107,7 @@
         </div>
         <p class="chat-input__disclaimer">
           이 답변은 법적 조언이 아닌 단순 정보 제공 목적입니다. 반드시 전문가와 상담하세요
-          <a href="#" class="chat-input__disclaimer-link">개인정보처리방침</a>
+          <a href="#" class="chat-input__disclaimer-link"  type="button" onclick="openModal('privacyModal')">개인정보처리방침</a>
         </p>
       </div>
 
@@ -154,7 +155,9 @@
 
   <!-- 마이 페이지 모달 추가 -->
   {% include 'mypage/mypage_modal.html' %}
+  {% include "accounts/privacy_modal.html" %}
 
+  <script src="{% static 'js/accounts/modal.js' %}"></script>
   <script src="{% static 'js/chat.js' %}"></script>
 </body>
 </html>

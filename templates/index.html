@@ -39,18 +39,10 @@
         </nav>
 
         <div class="site-nav__cta">
-          <button
-            class="btn-ghost"
-            type="button"
-            onclick="openModal('loginModal')"
-          >
+          <button class="btn-ghost" type="button" onclick="openModal('loginModal')">
             로그인
           </button>
-          <button
-            class="btn-solid"
-            type="button"
-            onclick="openModal('termsModal')"
-          >
+          <button class="btn-solid" type="button" onclick="openModal('signupModal')">
             회원가입
           </button>
         </div>
@@ -72,7 +64,7 @@
           <h1 class="hero__title" id="hero-title">
             <span class="line"><span>전세사기 피해자 75%,</span></span>
             <span class="line"
-              ><span class="accent">20–30대였습니다.</span></span
+              ><span class="accent">20-30대였습니다.</span></span
             >
           </h1>
 
@@ -359,8 +351,8 @@
                 <tr>
                   <th scope="col">구분</th>
                   <th scope="col">서울시<br />전세사기 위험분석</th>
-                  <th scope="col">C-node</th>
-                  <th scope="col">앨리비 (Allibee)</th>
+                  <th scope="col">C사 서비스</th>
+                  <th scope="col">A사 서비스</th>
                   <th scope="col" class="is-ours">아이고 청년</th>
                 </tr>
               </thead>
@@ -434,14 +426,6 @@
                 </p>
               </div>
               <div class="trust-cta__actions">
-                <button
-                  class="btn-warn"
-                  type="button"
-                  onclick="openModal('termsModal')"
-                >
-                  지금 시작
-                  <span class="arrow" aria-hidden="true">→</span>
-                </button>
                 <button
                   class="trust-cta__link"
                   type="button"
@@ -530,8 +514,8 @@
           <div class="site-footer__brand">
             <h3 id="footer-title">아이고 청년</h3>
             <p>
-              AI 임대차 계약서 검토 서비스 — 청년이 부담 없이 묻고, 근거와 함께
-              답을 받는 곳.
+              AI 임대차 계약서 검토 서비스 <br> 
+              청년이 부담 없이 질문하고, 근거와 함께 조언을 받는 곳.
             </p>
           </div>
           <div class="site-footer__col">
@@ -543,7 +527,7 @@
                 </button>
               </li>
               <li>
-                <button type="button" onclick="openModal('loginModal')">
+                <button type="button" onclick="openModal('loginModal')" >
                   로그인
                 </button>
               </li>
@@ -559,14 +543,7 @@
                 </button>
               </li>
               <li>
-                <button type="button" onclick="openModal('termsModal')">
-                  이용약관
-                </button>
-              </li>
-              <li>
-                <a href="#hero-title" aria-label="면책 고지로 이동"
-                  >면책 고지</a
-                >
+                <a href="#hero-title" aria-label="면책 고지로 이동">면책 고지</a>
               </li>
             </ul>
           </div>
@@ -584,11 +561,11 @@
     </footer>
 
     <!-- 모달 (기존 자산 재사용) -->
-    {% include "accounts/login_modal.html" %} {% include
-    "accounts/signup_privacy_modal.html" %} {% include
-    "accounts/signup_modal.html" %} {% include
-    "accounts/reset_password_modal.html" %} {% include
-    "accounts/privacy_modal.html" %}
+    {% include "accounts/login_modal.html" %} 
+    {% include "accounts/signup_privacy_modal.html" %} 
+    {% include "accounts/signup_modal.html" %} 
+    {% include "accounts/reset_password_modal.html" %} 
+    {% include "accounts/privacy_modal.html" %}
 
     <script src="{% static 'js/accounts/modal.js' %}"></script>
     <script src="{% static 'js/accounts/auth.js' %}"></script>

@@ -18,6 +18,8 @@
 
 // .active 클래스를 추가해 모달을 표시하고, 배경 스크롤을 막음
 function openModal(id) {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.paddingRight = scrollbarWidth + 'px';
   document.getElementById(id).classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -26,6 +28,7 @@ function openModal(id) {
 function closeModal(id) {
   document.getElementById(id).classList.remove('active');
   document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
   _resetModalContent(id);
 }
 
