@@ -218,10 +218,21 @@
 ---
 
 ## 4. 기술 스택
+| 분류 | 사용 |
+| --- | --- |
+| 언어 | Python, JS |
+| 웹 | Django, DRF, FastAPI | 
+| RDB | PostgreSQL | 
+| VectorDB | Qdrant |
+| LLM | LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct |
+| Embedding | Kure-v1 |
+| OCR | PaddleOCR | 
+| 인프라/배포 | AWS EC2, Runpod, Docker, NGINX, GUNICORN |
+| 개발 도구 | Github Actions, Ruff, pytest |
 
 ---
 
-## 5. 시스템 구성도 (시스템 아키텍처) & 설계의 특수성 여부
+## 5. 시스템 구성도 (시스템 아키텍처)
 
 ---
 
