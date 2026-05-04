@@ -254,13 +254,13 @@
 
 | 화면 | 미리보기 |
 | --- | --- |
-| 로그인 | ![로그인](static/images/readme/scr-home-001.png) |
-| 로그인 | ![로그인](static/images/readme/scr-home-002.png) |
-| 로그인 | ![로그인](static/images/readme/scr-home-003.png) |
-| 로그인 | ![로그인](static/images/readme/scr-home-004.png) |
-| 로그인 | ![로그인](static/images/readme/scr-home-005.png) |
-| 로그인 | ![로그인](static/images/readme/scr-home-006.png) |
-| 로그인 | ![로그인](static/images/readme/scr-home-007.png) |
+| Hero | ![Hero](static/images/readme/scr-home-001.png) |
+| Problem | ![Problem](static/images/readme/scr-home-002.png) |
+| Solution | ![Solution](static/images/readme/scr-home-003.png) |
+| Works | ![Works](static/images/readme/scr-home-004.png) |
+| Different | ![Different](static/images/readme/scr-home-005.png) |
+| FAQ | ![FAQ](static/images/readme/scr-home-006.png) |
+| Footer | ![Footer](static/images/readme/scr-home-007.png) |
 
 
 </details>
